@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: sideproject
+
+  datasource:
+    url: jdbc:oracle:thin:@yyyproject.tplinkdns.com:1521/XEPDB1
+    username: IORDJY
+    password: iordjy
+    driver-class-name: oracle.jdbc.OracleDriver
+
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml
+  type-aliases-package: com.yyy.sideproject.dto
+  configuration:
+    map-underscore-to-camel-case: true
+
+server:
+  port: 8081
