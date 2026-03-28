@@ -1,10 +1,35 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+    <meta charset="UTF-8">
+    <title>회원 목록</title>
+    <style>
+        table { width: 50%; border-collapse: collapse; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: center; }
+        th { background-color: #eee; }
+    </style>
 </head>
 <body>
+    <h1>가입된 회원 목록</h1>
+
+    <p th:if="${#lists.isEmpty(members)}">현재 가입된 회원이 없습니다.</p>
+
+    <table th:unless="${#lists.isEmpty(members)}">
+        <thead>
+            <tr>
+                <th>회원번호(ID)</th>
+                <th>이름</th>
+                <th>이메일</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="member : ${members}">
+                <td th:text="${member.id}">1</td>
+                <td th:text="${member.name}">임시이름</td>
+                <td th:text="${member.email}">temp@email.com</td>
+            </tr>
+        </tbody>
+    </table>
 
 </body>
 </html>

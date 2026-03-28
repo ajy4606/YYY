@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yyy.sideproject.mapper.UserMapper">
+
+    <select id="findAllUsers" resultType="UserDTO">
+        SELECT * FROM users ORDER BY id DESC
+    </select>
+
+    <insert id="insertUser">
+        INSERT INTO users (email, password, role)
+        VALUES (#{email}, #{password}, #{role})
+    </insert>
+
+</mapper>
