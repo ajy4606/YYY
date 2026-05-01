@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"> <head>
+    <meta charset="UTF-8">
+    <title>FAQ 고객센터 - 타임리프</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border-bottom: 1px solid #eee; padding: 12px; text-align: center; }
+        .form-section { background: #eee; padding: 20px; margin-bottom: 30px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>자주 묻는 질문 (Thymeleaf)</h1>
+
+    <div class="form-section">
+        <h3>새 질문 등록</h3>
+        <form th:action="@{/faq/register}" method="post">
+            카테고리: 
+            <select name="category">
+                <option value="교환반품">교환/반품</option>
+                <option value="이용방법">이용방법</option>
+            </select>
+            제목: <input type="text" name="title" required>
+            작성자: <input type="text" name="author" value="운영자">
+            <br><br>
+            내용: <br>
+            <textarea name="content" rows="3" style="width:100%"></textarea>
+            <br><br>
+            <input type="checkbox" name="isSecret"> 비밀글 여부
+            비밀번호: <input type="password" name="password">
+            <button type="submit">등록하기</button>
+        </form>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>카테고리</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>작성시간</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="faq : ${faqs}">
+                <td th:text="${faq.id}">1</td>
+                <td th:text="${faq.category}">카테고리</td>
+                <td>
+                    <span th:if="${faq.isSecret}">🔒</span>
+                    <span th:text="${faq.title}">제목입니다</span>
+                </td>
+                <td th:text="${faq.author}">작성자</td>
+                <td th:text="${#temporals.format(faq.createdAt, 'yyyy-MM-dd')}">2024-01-01</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(faqs)}">
+                <td colspan="5">등록된 질문이 없습니다.</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
