@@ -15,13 +15,17 @@ public class UserService {
 
     public UserResponse createUser(UserRequest request) {
 
+    	System.out.println("service진입");
         User user = new User();
+        user.setId(request.getId());
         user.setName(request.getName());
         user.setEmail(request.getEmail());
+        user.setPassword(request.getPassword());
+        user.setRole(request.getRole());
 
         User saved = userRepository.save(user);
 
-        return new UserResponse(saved.getId(), saved.getName(), saved.getEmail());
+        return new UserResponse(saved.getId(), saved.getName(), saved.getEmail(), saved.getPassword(), saved.getRole());
     }
 
     public UserResponse getUser(Long id) {
@@ -29,6 +33,6 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return new UserResponse(user.getId(), user.getName(), user.getEmail());
+        return new UserResponse(user.getId(), user.getName(), user.getEmail(), user.getPassword(), user.getRole());
     }
 }
