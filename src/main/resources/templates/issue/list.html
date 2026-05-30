@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>QA 과제 목록</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+        th { background-color: #f4f4f4; }
+        .btn-register { display: inline-block; padding: 10px 15px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; }
+    </style>
+</head>
+<body>
+
+    <h2>📝 테스트 과제 목록</h2>
+    
+    <a th:href="@{/issues/register}" class="btn-register">+ 새 과제 등록</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>제목</th>
+                <th>중요도</th>
+                <th>상태</th>
+                <th>보고자(ID)</th>
+                <th>생성일</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="issue : ${issues}">
+                <td th:text="${issue.id}">1</td>
+                <td>
+                    <a th:href="@{/issues/{id}(id=${issue.id})}" th:text="${issue.title}">과제 제목 예시</a>
+                </td>
+                <td th:text="${issue.severity}">MEDIUM</td>
+                <td th:text="${issue.status}">OPEN</td>
+                <td th:text="${issue.reporterId}">111</td>
+                <td th:text="${#temporals.format(issue.createdAt, 'yyyy-MM-dd HH:mm')}">2026-05-30</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(issues)}">
+                <td colspan="6">등록된 테스트 과제가 없습니다.</td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>
