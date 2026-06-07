@@ -30,25 +30,37 @@ public class UserController {
         return "loginView"; 
     }
 
-	/*
-	 * // 로그인 인증 처리
-	 * 
-	 * @PostMapping("/login") public String loginProcess(
-	 * 
-	 * @RequestParam("id") Long id,
-	 * 
-	 * @RequestParam("password") String password, HttpSession session, // 로그인 상태
-	 * 기억하는 세션 Model model) {
-	 * 
-	 * System.out.println("로그인 id: " + id);
-	 * 
-	 * UserResponse user = userService.login(id, password);
-	 * 
-	 * if (user != null) { session.setAttribute("loginUser", user);
-	 * System.out.println("로그인 성공. 메인 이동/사용자 이름: " + user.getName()); return
-	 * "redirect:/main"; } else { model.addAttribute("error",
-	 * "이메일 또는 비밀번호가 일치하지 않습니다."); return "loginView"; } }
-	 */
+    // 로그인 인증 처리
+    @PostMapping("/login")
+    public String loginProcess(
+            @RequestParam("id") Long id,
+            @RequestParam("password") String password,
+            HttpSession session, // 로그인 상태 기억하는 세션
+            Model model) {
+        
+        System.out.println("controller 로그인 id: " + id);
+        System.out.println("controller 로그인 password: " + password);
+
+        System.out.println("controller 로그인login : " + userService.login(id, password));
+        UserResponse user = userService.login(id, password);
+        System.out.println("controller 로그인user : " +user);
+        
+        if (user != null) {
+            session.setAttribute("loginUser", user);
+            System.out.println("로그인 성공. 메인 이동/사용자 이름: " + user.getName());
+            return "redirect:/main"; 
+        } else {
+            model.addAttribute("error", "이메일 또는 비밀번호가 일치하지 않습니다.");
+            return "loginView"; 
+        }
+    }
+
+    //로그인 후 메인화면
+    @GetMapping({"/main"})
+    public String mainPage() {
+        return "mainView";
+    }
+
     //사용자 목록
     @GetMapping("/users")
     public String getUserList(UserResponse userSearch, Model model) {
@@ -77,17 +89,12 @@ public class UserController {
         return "redirect:/users";  
     }
 
-	/*
-	 * //로그인 후 메인화면
-	 * 
-	 * @GetMapping({"/main"}) public String mainPage() {
-	 * System.out.println("메인 페이지 진입"); return "main"; }
-	 * 
-	 * //로그아웃
-	 * 
-	 * @GetMapping("/logout") public String logout(HttpSession session) {
-	 * session.invalidate(); // 세션 지움. System.out.println("로그아웃"); return
-	 * "redirect:/loginView"; }
-	 */
+    //로그아웃
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate(); // 세션 지움.
+        System.out.println("로그아웃");
+        return "redirect:/login";
+    }
 
 }

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>메인 페이지</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 50px; background-color: #f9f9f9; text-align: center; }
+        .container { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: inline-block; }
+        h1 { color: #333; }
+        .user-info { margin: 20px 0; color: #666; font-size: 1.1srem; }
+        .btn { display: inline-block; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px; margin: 5px; }
+        .btn-logout { background-color: #dc3545; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1 th:if="${session.loginUser != null}">
+            <span th:text="${session.loginUser.name}">사용자</span>님, 환영합니다!
+        </h1>
+        <h1 th:unless="${session.loginUser != null}">🔒 로그인이 필요합니다.</h1>
+
+        <div class="user-info" th:if="${session.loginUser != null}">
+            <p>이메일: <span th:text="${session.loginUser.email}">example@email.com</span></p>
+        </div>
+
+        <div style="margin-top: 30px;">
+            <a th:href="@{/users}" class="btn">회원 목록 보기</a>
+            <a th:if="${session.loginUser != null}" th:href="@{/logout}" class="btn btn-logout">로그아웃</a>
+            <a th:unless="${session.loginUser != null}" th:href="@{/login}" class="btn">로그인하러 가기</a>
+        </div>
+    </div>
+
+</body>
+</html>

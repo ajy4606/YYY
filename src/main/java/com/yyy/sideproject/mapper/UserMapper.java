@@ -14,6 +14,6 @@ public interface UserMapper {
     
     void save(UserRequest request);
     
-	//List<UserResponse> loginUser(@Param("id") UserResponse userSearch);
+	List<UserResponse> loginUser(@Param("id") UserResponse searchParam);
 
 }

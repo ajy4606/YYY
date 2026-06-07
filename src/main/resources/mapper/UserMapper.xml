@@ -22,7 +22,7 @@
     </insert>
     
     <select id="loginUser" resultType="com.yyy.sideproject.dto.UserResponse">
-    SELECT ID, NAME, EMAIL, ROLE 
+    SELECT ID, NAME, EMAIL, ROLE ,PASSWORD
    	  FROM USERS
      WHERE ID = #{id}
        AND PASSWORD = #{password}

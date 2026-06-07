@@ -12,33 +12,39 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final UserMapper userMapper;
-    
-    public List<UserResponse> getUserList(UserResponse userSearch) {
-        return userMapper.srchUser(userSearch); 
-    }
+	private final UserMapper userMapper;
 
-    public void createUser(UserRequest userRequest) {
+	public List<UserResponse> getUserList(UserResponse userSearch) {
+		return userMapper.srchUser(userSearch);
+	}
 
-    	userMapper.save(userRequest);  
-    }
+	public void createUser(UserRequest userRequest) {
 
-	/*
-	 * public UserResponse login(Long id, String password) {
-	 * 
-	 * System.out.println("servise.login : "+id+" / "+password);
-	 * 
-	 * UserResponse searchParam = new UserResponse();
-	 * 
-	 * searchParam.setId(id); searchParam.setPassword("password");
-	 * 
-	 * System.out.println("servise.login.searchParam : "+searchParam);
-	 * 
-	 * List<UserResponse> users = userMapper.loginUser(searchParam);
-	 * 
-	 * if (!users.isEmpty()) { UserResponse user = users.get(0); if
-	 * (user.getPassword().equals(password)) { return user; } } return null; }
-	 */
-    
+		userMapper.save(userRequest);
+	}
+
+	public UserResponse login(Long id, String password) {
+		System.out.println("servise.login : "+id+" / "+password);
+	  
+		UserResponse searchParam = new UserResponse();
+	  
+		searchParam.setId(id); 
+		searchParam.setPassword(password);
+	  
+		System.out.println("servise.login.searchParam : "+searchParam.toString());
+	  
+		List<UserResponse> users = userMapper.loginUser(searchParam);
+
+		System.out.println("servise.login.users : "+users.toString());
+		
+		if (!users.isEmpty()) {
+			UserResponse user = users.get(0); 
+			if(user.getPassword().equals(password)) {
+				return user; 
+			} 
+		}
+		return null;
+	}
+	 
+
 }
-
