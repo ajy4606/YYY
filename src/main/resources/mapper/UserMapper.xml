@@ -3,7 +3,7 @@
 
 <mapper namespace="com.yyy.sideproject.mapper.UserMapper">
 
-    <select id="findAllUsers" resultType="UserDTO">
+    <select id="findAllUsers" resultType="com.yyy.sideproject.dto.UserResponse">
         SELECT * FROM users ORDER BY id DESC
     </select>
 
