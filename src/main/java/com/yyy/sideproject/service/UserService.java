@@ -1,38 +1,50 @@
 package com.yyy.sideproject.service;
 
-import com.yyy.sideproject.domain.User;
 import com.yyy.sideproject.dto.UserRequest;
 import com.yyy.sideproject.dto.UserResponse;
-import com.yyy.sideproject.repository.UserRepository;
+import com.yyy.sideproject.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
+	private final UserMapper userMapper;
 
-    private final UserRepository userRepository;
+	public List<UserResponse> getUserList(UserResponse userSearch) {
+		return userMapper.srchUser(userSearch);
+	}
 
-    public UserResponse createUser(UserRequest request) {
+	public void createUser(UserRequest userRequest) {
 
-    	System.out.println("service진입");
-        User user = new User();
-        user.setId(request.getId());
-        user.setName(request.getName());
-        user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword());
-        user.setRole(request.getRole());
+		userMapper.save(userRequest);
+	}
 
-        User saved = userRepository.save(user);
+	public UserResponse login(Long id, String password) {
+		System.out.println("servise.login : "+id+" / "+password);
+	  
+		UserResponse searchParam = new UserResponse();
+	  
+		searchParam.setId(id); 
+		searchParam.setPassword(password);
+	  
+		System.out.println("servise.login.searchParam : "+searchParam.toString());
+	  
+		List<UserResponse> users = userMapper.loginUser(searchParam);
 
-        return new UserResponse(saved.getId(), saved.getName(), saved.getEmail(), saved.getPassword(), saved.getRole());
-    }
+		System.out.println("servise.login.users : "+users.toString());
+		
+		if (!users.isEmpty()) {
+			UserResponse user = users.get(0); 
+			if(user.getPassword().equals(password)) {
+				return user; 
+			} 
+		}
+		return null;
+	}
+	 
 
-    public UserResponse getUser(Long id) {
-
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        return new UserResponse(user.getId(), user.getName(), user.getEmail(), user.getPassword(), user.getRole());
-    }
 }
