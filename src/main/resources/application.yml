@@ -8,6 +8,18 @@ spring:
     password: iordjy
     driver-class-name: oracle.jdbc.OracleDriver
 
+  jpa:
+    show-sql: true            # 실행되는 SQL을 콘솔에 출력
+    properties:
+      hibernate:
+        format_sql: true      # SQL을 보기 좋게 줄바꿈/들여쓰기
+
+# 바인딩되는 실제 파라미터 값(?에 들어가는 값)까지 보고 싶을 때
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.orm.jdbc.bind: trace
+
 mybatis:
   mapper-locations: classpath:mapper/**/*.xml
   type-aliases-package: com.yyy.sideproject.dto

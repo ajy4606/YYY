@@ -24,7 +24,7 @@
                 <option value="이용방법">이용방법</option>
             </select>
             제목: <input type="text" name="title" required>
-            작성자: <input type="text" name="author" value="운영자">
+            회원 ID: <input type="number" name="userId" min="1" required>
             <br><br>
             내용: <br>
             <textarea name="content" rows="3" style="width:100%"></textarea>
@@ -51,7 +51,7 @@
                 <td th:text="${faq.category}">카테고리</td>
                 <td>
                     <span th:if="${faq.isSecret}">🔒</span>
-                    <span th:text="${faq.title}">제목입니다</span>
+                    <a th:href="@{/faq/{id}(id=${faq.id})}" th:text="${faq.title}">제목입니다</a>
                 </td>
                 <td th:text="${faq.author}">작성자</td>
                 <td th:text="${#temporals.format(faq.createdAt, 'yyyy-MM-dd')}">2024-01-01</td>
