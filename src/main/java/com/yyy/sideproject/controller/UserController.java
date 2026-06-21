@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -39,26 +38,22 @@ public class UserController {
             Model model) {
         
         System.out.println("controller 로그인 id: " + id);
-        System.out.println("controller 로그인 password: " + password);
 
         System.out.println("controller 로그인login : " + userService.login(id, password));
         UserResponse user = userService.login(id, password);
         System.out.println("controller 로그인user : " +user);
         
         if (user != null) {
+            // 로그인 세션 유지 시간 (초 단위) 마우스와 페이지 이동 없을때 세션 끊김
+            session.setMaxInactiveInterval(3600); 
+            
             session.setAttribute("loginUser", user);
             System.out.println("로그인 성공. 메인 이동/사용자 이름: " + user.getName());
             return "redirect:/main"; 
         } else {
-            model.addAttribute("error", "이메일 또는 비밀번호가 일치하지 않습니다.");
+            model.addAttribute("error", "아이디 또는 비밀번호가 일치하지 않습니다.");
             return "loginView"; 
         }
-    }
-
-    //로그인 후 메인화면
-    @GetMapping({"/main"})
-    public String mainPage() {
-        return "mainView";
     }
 
     //사용자 목록
