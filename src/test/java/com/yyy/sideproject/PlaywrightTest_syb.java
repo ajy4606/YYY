@@ -1,10 +1,14 @@
 package com.yyy.sideproject;
 
+import org.junit.jupiter.api.Test;
+
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.*;
 
 public class PlaywrightTest_syb {
-  public static void runPlaywrightTest(String[] args) {
+	
+	@Test
+	public void runPlaywrightTest() {
     try (Playwright playwright = Playwright.create()) {
       Browser browser = playwright.chromium().launch(new BrowserType.LaunchOptions()
         .setHeadless(false));
