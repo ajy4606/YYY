@@ -15,8 +15,7 @@
 	    </where>
     </if>
 	</select>
-
-    <select id="findAllUsers" resultType="com.yyy.sideproject.dto.UserResponse">
+   <select id="findAllUsers" resultType="com.yyy.sideproject.dto.UserResponse">
         SELECT * FROM users ORDER BY id DESC
     </select>
 
@@ -29,6 +28,11 @@
         INSERT INTO USERS (NAME, ID, EMAIL, PASSWORD, ROLE, CREATED_AT)
         VALUES (#{name}, #{id}, #{email}, #{password}, 'role', SYSDATE)
     </insert>
+
+    <!-- FAQ 작성자 검증용: id로 회원 단건 조회 -->
+    <select id="findById" resultType="com.yyy.sideproject.dto.UserResponse">
+        SELECT ID, NAME, EMAIL, ROLE FROM USERS WHERE ID = #{id}
+    </select>
     
     <select id="loginUser" resultType="com.yyy.sideproject.dto.UserResponse">
     SELECT ID, NAME, EMAIL, ROLE ,PASSWORD

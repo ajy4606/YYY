@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"> <head>
+    <meta charset="UTF-8">
+    <title>FAQ 고객센터 - 타임리프</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border-bottom: 1px solid #eee; padding: 12px; text-align: center; }
+        .form-section { background: #eee; padding: 20px; margin-bottom: 30px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+	<div class ="container">
+		<h1>관리자 페이지</h1>
+	
+	
+<table>
+	<thead>
+	  <tr th:each = "user, stat : ${users}">
+	  	<td th:stat = '&{stat.count}'>1</td>
+	  	<td th:text = "${users.id}">ID</td>
+	  	<td th:text = "${users.name}">회원 이름</th>
+	  	<td th:text = "${users.email}">이메일</td>
+	  	<td th:text = "${users.role}"'>직책</th>
+	  	<th th:text = "${#temporals.format(users.createdAt, 'yyyy-mm-dd')}">생성일자</th>
+	  </tr>
+	</thead>
+	<tbody>
+	
+	
+	
+	</tbody>
+</table>
+	</div>
+
+</body>
+</html>
