@@ -4,37 +4,164 @@
     <meta charset="UTF-8">
     <title>메인 페이지</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 50px; background-color: #f9f9f9; text-align: center; }
-        .container { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: inline-block; }
-        h1 { color: #333; }
-        .user-info { margin: 20px 0; color: #666; font-size: 1.1rem; } 
-        .btn { display: inline-block; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px; margin: 5px; }
-        .btn-secondary { background-color: #6c757d; }
-        .btn-logout { background-color: #dc3545; }
+        /* 기본 리셋 및 전반적인 미니멀 레이아웃 */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f8f9fa; color: #333; }
+        
+        /* 상단 메뉴바 (Navigation Bar) 스타일 */
+        .navbar {
+            background-color: #ffffff;
+            height: 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* 로고 영역 */
+        .navbar-logo a {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        /* 메뉴 그룹 */
+        .navbar-menu {
+            display: flex;
+            align-items: center;
+            list-style: none;
+            gap: 20px;
+        }
+
+        /* 상단바 메뉴 링크 스타일 (💡 cursor: pointer 추가로 마우스 손모양 효과) */
+        .nav-item {
+            color: #555;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            cursor: pointer; 
+        }
+        .nav-item:hover {
+            background-color: #f1f3f5;
+            color: #007bff;
+        }
+
+        /* 상단바 내 사용자 정보 텍스트 */
+        .nav-user-info {
+            font-size: 0.9rem;
+            color: #666;
+            margin-right: 5px;
+        }
+        .nav-user-info strong {
+            color: #333;
+        }
+
+        /* 로그인/로그아웃 버튼 스타일 */
+        .btn-nav-action {
+            font-size: 0.9rem;
+            padding: 6px 14px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .btn-login {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-login:hover { background-color: #0056b3; }
+        
+        .btn-logout {
+            background-color: #fff;
+            color: #dc3545;
+            border: 1px solid #dc3545;
+        }
+        .btn-logout:hover {
+            background-color: #fff5f5;
+        }
+
+        /* 메인 컨텐츠 영역 */
+        .content-container {
+            max-width: 800px;
+            margin: 80px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        h1 { font-size: 2rem; color: #212529; margin-bottom: 15px; }
+        .welcome-desc { color: #6c757d; font-size: 1.1rem; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1 th:if="${session.loginUser != null}">
-            <span th:text="${session.loginUser.name}">사용자</span>님, 환영합니다!
-        </h1>
-        <h1 th:unless="${session.loginUser != null}">🔒 로그인이 필요합니다.</h1>
-
-        <div class="user-info" th:if="${session.loginUser != null}">
-            <p>이메일: <span th:text="${session.loginUser.email}">example@email.com</span></p>
+    <nav class="navbar">
+        <div class="navbar-logo">
+            <a th:href="@{/main}">YYY</a>
         </div>
 
-        <div style="margin-top: 30px;">
-            <a th:href="@{/users}" class="btn">회원 목록 보기</a>
-            
-            <a th:href="@{/faq}" class="btn btn-secondary">FAQ</a>
-            <a th:href="@{/assignment}" class="btn btn-secondary">과제 페이지</a>
-            
-            <a th:if="${session.loginUser != null}" th:href="@{/logout}" class="btn btn-logout">로그아웃</a>
-            <a th:unless="${session.loginUser != null}" th:href="@{/login}" class="btn">로그인하러 가기</a>
+        <ul class="navbar-menu">
+            <th:block th:if="${session.loginUser != null}">
+                <li><span th:onclick="loadContent('/assignment')" class="nav-item">과제 페이지</span></li>
+                <li><span th:onclick="loadContent('/faq')" class="nav-item">FAQ</span></li>
+                <li><span th:onclick="loadContent('/users')" class="nav-item">회원 목록</span></li>
+                <li><span th:onclick="loadContent('/mypage/mypage')" class="nav-item">마이 페이지</span></li>
+                <li style="color: #dee2e6; margin: 0 5px;">|</li>
+                
+                <li class="navbar-menu">
+                    <span class="nav-user-info">
+                        <strong><span th:text="${session.loginUser.name}">사용자</span></strong>님
+                    </span>
+                    <a th:href="@{/logout}" class="btn-nav-action btn-logout">로그아웃</a>
+                </li>
+            </th:block>
+
+            <li th:unless="${session.loginUser != null}">
+                <a th:href="@{/login}" class="btn-nav-action btn-login">로그인</a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="content-container" id="main-content">
+        <div th:if="${session.loginUser != null}">
+            <h1>안녕하세요, <span th:text="${session.loginUser.name}">사용자</span>님!</h1>
+            <p class="welcome-desc">성공적으로 로그인되었습니다. 상단 메뉴를 통해 원하시는 작업으로 이동하세요.</p>
+            <p style="margin-top: 15px; color: #868e96; font-size: 0.9rem;" th:text="'계정: ' + ${session.loginUser.email}">example@email.com</p>
+        </div>
+        
+        <div th:unless="${session.loginUser != null}">
+            <h1>안녕하세요, 로그인해주세요.</h1>
+            <p class="welcome-desc" style="margin-top: 15px; font-size: 0.95rem;">상단 우측의 로그인 버튼을 이용해 로그인하실 수 있습니다.</p>
         </div>
     </div>
+
+    <script>
+        function loadContent(url) {
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('페이지를 전송받지 못했습니다.');
+                    }
+                    return response.text(); // 서버가 리턴한 HTML 텍스트 변환
+                })
+                .then(html => {
+                    // content-container 영역 내부의 태그만 통째로 서버 결과물로 교체!
+                    document.getElementById('main-content').innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('Error loading content:', error);
+                    alert('화면을 전환하는 도중 오류가 발생했습니다.');
+                });
+        }
+    </script>
 
 </body>
 </html>

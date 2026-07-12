@@ -1,41 +1,60 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>회원 목록</title>
+<div style="width: 100%; text-align: left; animation: fadeIn 0.3s ease;">
+    
     <style>
-        table { width: 50%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #ccc; padding: 10px; text-align: center; }
-        th { background-color: #eee; }
+        .users-title { font-size: 1.5rem; color: #212529; font-weight: bold; margin-bottom: 25px; }
         
-        /* 🔍 검색창 구역 디자인 추가 */
-        .search-container { width: 50%; margin-bottom: 15px; text-align: left; }
-        .search-select, .search-input { padding: 6px; font-size: 14px; }
-        .search-input { width: 200px; }
-        .btn-search { padding: 6px 12px; background-color: #555; color: white; border: none; cursor: pointer; }
-        .btn-search:hover { background-color: #333; }
+        /* 🔍 검색 바 영역 세련되게 정돈 */
+        .search-container { display: flex; gap: 8px; margin-bottom: 20px; }
+        .search-select { 
+            padding: 8px 12px; font-size: 0.9rem; border: 1px solid #dee2e6; 
+            border-radius: 6px; background-color: #fff; color: #495057; outline: none;
+        }
+        .search-input { 
+            padding: 8px 12px; font-size: 0.9rem; border: 1px solid #dee2e6; 
+            border-radius: 6px; width: 240px; outline: none; transition: border 0.2s;
+        }
+        .search-input:focus { border-color: #007bff; }
         
-        .navigation-container { width: 50%; margin-top: 15px; text-align: right; }
+        /* 검색 버튼 포인트 컬러 */
+        .btn-search { 
+            padding: 8px 16px; background-color: #007bff; color: white; 
+            border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 500; cursor: pointer; 
+        }
+        .btn-search:hover { background-color: #0056b3; }
+        
+        /* 📊 모던 템플릿 테이블 스타일 */
+        .user-table { width: 100%; border-collapse: collapse; margin-top: 10px; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+        .user-table th { background-color: #f8f9fa; color: #495057; font-weight: 600; padding: 14px; font-size: 0.9rem; border-bottom: 2px solid #edf2f7; text-align: center; }
+        .user-table td { padding: 14px; font-size: 0.9rem; color: #4a5568; border-bottom: 1px solid #edf2f7; text-align: center; }
+        .user-table tbody tr:hover { background-color: #fcfdfd; }
+        
+        /* 데이터 공백 상태 스타일 */
+        .empty-msg { padding: 40px 0; color: #a0aec0; text-align: center; font-size: 0.95rem; }
+        
+        /* 진입 애니메이션 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
-</head>
-<body>
-    <h1>가입된 회원 목록</h1>
+
+    <h2 class="users-title">👤 가입된 회원 목록</h2>
 
     <div class="search-container">
-		<form method="get">
-		    <select name="searchType" class="search-select">
-				<option value="all" th:selected="${param.searchType == 'all'}">전체</option>
-				<option value="id" th:selected="${param.searchType == 'id'}">회원번호</option>
-		        <option value="name" th:selected="${param.searchType == 'name'}">이름</option>
-		    </select>
-		    <input type="text" name="keyword" class="search-input" th:value="${param.keyword}">
-		    <button type="submit" class="btn-search">검색</button>
-		</form>
+        <form onsubmit="searchUsers(event)" style="display: flex; gap: 8px;">
+            <select id="searchType" name="searchType" class="search-select">
+                <option value="all" th:selected="${param.searchType == 'all'}">전체</option>
+                <option value="id" th:selected="${param.searchType == 'id'}">회원번호</option>
+                <option value="name" th:selected="${param.searchType == 'name'}">이름</option>
+            </select>
+            <input type="text" id="keyword" name="keyword" class="search-input" th:value="${param.keyword}" placeholder="검색어를 입력하세요...">
+            <button type="submit" class="btn-search">검색</button>
+        </form>
     </div>
 
-    <p th:if="${#lists.isEmpty(userList)}">현재 가입된 회원이 없거나 검색 결과가 없습니다.</p>
+    <p th:if="${#lists.isEmpty(userList)}" class="empty-msg">현재 가입된 회원이 없거나 검색 결과가 없습니다.</p>
 
-    <table th:unless="${#lists.isEmpty(userList)}">
+    <table th:unless="${#lists.isEmpty(userList)}" class="user-table">
         <thead>
             <tr>
                 <th>회원번호(ID)</th>
@@ -46,21 +65,34 @@
         </thead>
         <tbody>
             <tr th:each="user : ${userList}">
-                <td th:text="${user.id}"></td>
+                <td th:text="${user.id}" style="font-weight: 500; color: #2d3748;"></td>
                 <td th:text="${user.name}"></td>
-                <td th:text="${user.email}"></td>
-                <td th:text="${user.role}"></td>
+                <td th:text="${user.email}" style="color: #718096;"></td>
+                <td>
+                    <span th:text="${user.role}" style="background: #e2e8f0; padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 500; color: #4a5568;"></span>
+                </td>
             </tr>
         </tbody>
     </table>
 
-    <div class="navigation-container">
-        <button type="button" class="btn btn-primary" 
-                th:onclick="|location.href='@{/login}'|">로그인 페이지로</button>
-    </div>
-	<div class="navigation-container">
-	    <button type="button" class="btn btn-primary" 
-	            th:onclick="|location.href='@{/main}'|">메인페이지</button>
-	</div>
-</body>
-</html>
+    <script>
+        function searchUsers(event) {
+            event.preventDefault(); // 폼 제출로 인한 브라우저 새로고침 강제 차단
+            
+            const type = document.getElementById('searchType').value;
+            const keyword = document.getElementById('keyword').value;
+            
+            // 검색 조건 쿼리스트링 빌드
+            const url = `/users?searchType=${type}&keyword=${encodeURIComponent(keyword)}`;
+            
+            // 메인 페이지(main.html)에 이미 선언해 둔 loadContent 함수를 재사용해 본문 박스만 새로고침합니다.
+            if (typeof loadContent === 'function') {
+                loadContent(url);
+            } else {
+                // 혹시 모를 예외 대비용 주소창 다이렉트 이동
+                location.href = url;
+            }
+        }
+    </script>
+
+</div>

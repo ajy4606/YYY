@@ -20,6 +20,19 @@
         INSERT INTO USERS (NAME, ID, EMAIL, PASSWORD, ROLE, CREATED_AT)
         VALUES (#{name}, #{id}, #{email}, #{password}, 'role', SYSDATE)
     </insert>
+    
+    <select id="findPasswordById" parameterType="long" resultType="string">
+	    SELECT PASSWORD
+	    FROM USERS
+	    WHERE ID = #{id}
+	</select>
+
+	<update id="updatePassword">
+	    UPDATE USERS
+	    SET PASSWORD = #{password},
+	        CHANGE_DT = SYSDATE
+	    WHERE ID = #{id}
+	</update>
 
     <!-- FAQ 작성자 검증용: id로 회원 단건 조회 -->
     <select id="findById" resultType="com.yyy.sideproject.dto.UserResponse">
