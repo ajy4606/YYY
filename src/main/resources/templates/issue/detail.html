@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>과제 상세 정보</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .detail-box { border: 1px solid #ddd; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
+        .detail-row { margin-bottom: 10px; }
+        .label { font-weight: bold; display: inline-block; width: 120px; }
+        .btn-back { padding: 10px 15px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 5px; }
+    </style>
+</head>
+<body>
+
+    <h2>🔍 과제 상세 정보</h2>
+
+    <div class="detail-box">
+        <div class="detail-row"><span class="label">과제 번호(ID):</span> <span th:text="${issue.id}"></span></div>
+        <div class="detail-row"><span class="label">제목:</span> <strong th:text="${issue.title}"></strong></div>
+        <div class="detail-row"><span class="label">중요도:</span> <span th:text="${issue.severity}"></span></div>
+        <div class="detail-row"><span class="label">상태:</span> <span th:text="${issue.status}"></span></div>
+        <div class="detail-row"><span class="label">보고자 ID:</span> <span th:text="${issue.reporterId}"></span></div>
+        <div class="detail-row"><span class="label">담당자 ID:</span> <span th:text="${issue.assigneeId}"></span></div>
+        <div class="detail-row"><span class="label">등록일시:</span> <span th:text="${#temporals.format(issue.createdAt, 'yyyy-MM-dd HH:mm')}"></span></div>
+        
+        <hr>
+        <div class="detail-row">
+            <span class="label">상세 설명:</span>
+            <pre style="margin-top: 10px; padding: 15px; background-color: #f8f9fa; border: 1px solid #eee;" th:text="${issue.description}"></pre>
+        </div>
+    </div>
+
+    <a th:href="@{/issues/list}" class="btn-back">목록으로 돌아가기</a>
+    </body>
+</html>

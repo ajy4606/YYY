@@ -14,6 +14,21 @@
 <body>
 
     <h2>📝 테스트 과제 목록</h2>
+    <div style="background-color: #f8f9fa; padding: 15px; margin-bottom: 20px; border-radius: 5px;">
+        <form th:action="@{/issues/list}" method="get" style="display: flex; gap: 10px; align-items: center;">
+            <label>제목:</label>
+            <input type="text" name="title" placeholder="과제 제목 검색" th:value="${param.title}">
+            
+            <label>상태:</label>
+            <select name="status">
+                <option value="">전체 상태</option>
+                <option value="OPEN" th:selected="${param.status == 'OPEN'}">OPEN</option>
+                <option value="CLOSED" th:selected="${param.status == 'CLOSED'}">CLOSED</option>
+            </select>
+            
+            <button type="submit" style="padding: 5px 15px; background: #0056b3; color: #fff; border: none;">검색</button>
+        </form>
+    </div>
     
     <a th:href="@{/issues/register}" class="btn-register">+ 새 과제 등록</a>
 

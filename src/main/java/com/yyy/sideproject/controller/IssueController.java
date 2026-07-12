@@ -6,8 +6,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.yyy.sideproject.domain.Issue;
 import com.yyy.sideproject.dto.IssueRequest;
@@ -54,14 +56,33 @@ public class IssueController {
     
  // 🌟 새로 추가할 부분: 목록 화면 처리
     @GetMapping("/list")
-    public String showIssueList(Model model) {
-        // 1. Service를 통해 DB에서 모든 과제 목록을 가져옵니다.
-        List<Issue> issues = issueService.getAllIssues();
+    public String showIssueList(
+            @RequestParam(name = "title", required = false) String title, 
+            @RequestParam(name = "status", required = false) String status, 
+            Model model) {
         
-        // 2. 화면(HTML)에서 사용할 수 있도록 "issues"라는 이름으로 담아줍니다.
+        // 검색 조건(title, status)을 받아 MyBatis 동적 쿼리 서비스를 호출합니다.
+        // 검색어가 없으면(null) 자동으로 전체 조회가 됩니다.
+        List<Issue> issues = issueService.searchIssues(title, status);
+        
+        // 화면(HTML)에 데이터를 전달합니다.
         model.addAttribute("issues", issues);
         
-        // 3. templates/issue 폴더 안의 list.html을 보여주도록 지시합니다.
         return "issue/list"; 
+    }
+    
+    
+ // 🌟 새로 추가할 부분: 상세 조회 화면 처리
+    // {id}는 URL 경로에 있는 숫자를 변수로 받겠다는 뜻입니다.
+    @GetMapping("/{id}")
+    public String showIssueDetail(@PathVariable("id") Long id, Model model) {
+        // 1. Service를 통해 해당 ID의 과제 정보를 가져옵니다.
+        Issue issue = issueService.getIssueById(id);
+        
+        // 2. 화면에서 쓸 수 있게 모델에 담습니다.
+        model.addAttribute("issue", issue);
+        
+        // 3. templates/issue 폴더 안의 detail.html을 보여줍니다.
+        return "issue/detail";
     }
 }
