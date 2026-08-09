@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>비밀번호 변경</title>
+    <title>이메일 변경</title>
     <style>
         .pw-change-wrapper {
             --primary-color: #4f46e5;
@@ -132,54 +132,28 @@
 
     <div class="pw-change-wrapper">
         <div class="pw-change-card">
-            <h2>비밀번호 변경</h2>
-            <p class="subtitle">안전한 서비스 이용을 위해 비밀번호를 변경해주세요.</p>
+            <h2>이메일 변경</h2>
+            <p class="subtitle">새롭게 사용할 이메일 주소를 입력해주세요.</p>
 
             <div th:if="${errorMessage}" class="error-box">
                 <span>⚠</span>
                 <span th:text="${errorMessage}">에러 메시지 영역</span>
             </div>
 
-            <!-- 💡 변경 포인트 1: form 전송 시(onsubmit) 자바스크립트 함수가 검증하도록 지정 -->
-            <form th:action="@{/users/mypage/chg_password}" method="post" onsubmit="return checkPasswordForm(this);">
+            <form th:action="@{/users/mypage/chg_email}" method="post">
                 <div class="form-group">
-                    <label>현재 비밀번호</label>
-                    <input type="password" name="password" placeholder="현재 비밀번호를 입력하세요" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>새 비밀번호</label>
-                    <input type="password" name="newPassword" placeholder="새 비밀번호를 입력하세요" required>
-                </div>
-
-                <div class="form-group">
-                    <label>새 비밀번호 확인</label>
-                    <input type="password" name="confirmPassword" placeholder="새 비밀번호를 한 번 더 입력하세요" required>
+                    <label>새 이메일 주소</label>
+                    <!-- 💡 type="email"로 설정하면 브라우저가 @과 도메인이 들어간 형식인지 수동 검증해줍니다 -->
+                    <input type="email" name="email" placeholder="example@domain.com" required>
                 </div>
 
                 <div class="button-group">
-                    <!-- 💡 변경 포인트 2: disabled 제거! 언제나 클릭할 수 있게 열어둡니다. -->
-                    <button type="submit" class="btn-submit">비밀번호 변경</button>
-                    <button type="button" class="btn-cancel" th:onclick="|location.href='/users/mypage'|">취소</button>
+                    <button type="submit" class="btn-submit">이메일 변경</button>
+                    <button type="button" class="btn-cancel" th:onclick="location.href=[[@{/users/mypage}]]">취소</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- 💡 전송 시점에 딱 한 번만 깔끔하게 비교하는 가벼운 로직 -->
-    <script>
-        function checkPasswordForm(form) {
-            const newPw = form['newPassword'].value;
-            const confirmPw = form['confirmPassword'].value;
-
-            if (newPw !== confirmPw) {
-                alert("새 비밀번호와 새 비밀번호 확인이 일치하지 않습니다.");
-                form['confirmPassword'].focus();
-                return false; // ❌ 전송을 취소하고 화면에 머무릅니다.
-            }
-            
-            return true; //  서버로 데이터를 정상 전송합니다.
-        }
-    </script>
 </body>
 </html>

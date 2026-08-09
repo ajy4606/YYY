@@ -20,7 +20,10 @@ public interface UserMapper {
 	UserResponse findById(@Param("id") Long id);
 	
 	//비밀번호 변경
-	String findPasswordById( @Param("id") Long id );
-    void updatePassword( @Param("id") Long id, @Param("password") String password );
+	void updatePassword(UserRequest userRequest);
+	String findPasswordById(Long id);
+	
+	//이메일 변경
+	void updateEmail(UserRequest userRequest);
 
 }

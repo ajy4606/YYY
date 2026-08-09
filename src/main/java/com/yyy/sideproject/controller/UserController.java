@@ -5,11 +5,12 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.yyy.sideproject.domain.User;
 import com.yyy.sideproject.dto.UserRequest;
 import com.yyy.sideproject.dto.UserResponse;
 import com.yyy.sideproject.service.UserService;
@@ -162,40 +163,29 @@ public class UserController {
 	/**
      * 2. 이메일 변경 화면 요청 (HTML 조각 리턴)
      */
-    @GetMapping("/mypage/chg_email")
-    public String changeEmailForm(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("loginUser") == null) {
-            return "redirect:/login";
-        }
-        
-        // 현재 이메일을 인풋창에 미리 보여주기 위해 세션 유저 전달
-        model.addAttribute("user", session.getAttribute("loginUser"));
-        return "mypage/change_email"; // templates/mypage/change-email.html
+	@GetMapping("/mypage/chg_email")
+    public String changeEmailForm() {
+		return "mypage/chg_email";
     }
 
-    /**
+	/**
      * 3. 이메일 변경 기능 처리 (POST)
      */
-    @PostMapping("/mypage/chg_email")
-    @ResponseBody // 비동기 응답용 (성공 메시지 반환)
-    public String changeEmail(HttpServletRequest request, String newEmail) {
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("loginUser") == null) {
-            return "AUTH_REQUIRED";
+	@PostMapping("/users/mypage/chg_email")
+    public String changeEmail(@RequestParam("email") String email, RedirectAttributes redirectAttributes, Model model) {
+        try {
+            Long loginUserId = (long) 123; 
+            userService.changeEmail(loginUserId, email);
+            
+            model.addAttribute("msg", "이메일이 정상적으로 변경되었습니다.");
+            // 💡 URL 뒤에 마이페이지 탭을 식별할 쿼리 스트링을 붙여줍니다.
+            model.addAttribute("url", "/main?tab=mypage"); 
+            return "common/alert";
+            
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/users/mypage/chg_email";
         }
-
-        // 💡 실제 프로젝트의 User 객체 타입으로 캐스팅하세요 (예: UserEntity, UserVo 등)
-        var loginUser = (User) session.getAttribute("loginUser"); 
-        
-        // TODO: DB 업데이트 로직 실행
-        // userService.updateEmail(loginUser.getId(), newEmail);
-        
-        // 💡 중요: DB가 바뀌었으므로 세션 사물함에 들어있는 이메일 정보도 실시간 동기화 업데이트!
-        loginUser.setEmail(newEmail);
-        session.setAttribute("loginUser", loginUser);
-
-        return "SUCCESS";
     }
 
     /**
@@ -211,51 +201,42 @@ public class UserController {
     }
 
     /**
-     * 5. 비밀번호 변경 기능 처리 (POST)
+     * 5. 비밀번호 변경 기능 처리 (일반 Form POST 전송)
      */
-    @PostMapping("/mypage/chg_password")
-    @ResponseBody
-    public String changePassword(HttpServletRequest request,
-            @RequestParam String currentPassword,
-            @RequestParam String newPassword
-    ) {
-    	
-        HttpSession session = request.getSession(false);
-        
-        if (session == null || session.getAttribute("loginUser") == null) {
-            return "AUTH_REQUIRED";
+    @PostMapping("/users/mypage/chg_password") 
+    public String changePassword(@ModelAttribute UserRequest userRequest, HttpServletRequest request, Model model) {
+        try {
+            // 1. 세션에서 로그인 회원 정보 조회
+            HttpSession session = request.getSession(false);
+            if (session == null || session.getAttribute("loginUser") == null) {
+                return "redirect:/login";
+            }
+            
+            UserResponse loginUser = (UserResponse) session.getAttribute("loginUser");
+            Long currentUserId = loginUser.getId(); 
+            
+            // 2. 서비스 레이어 호출 (비밀번호 검증 및 변경 SQL 실행)
+            userService.changePassword(currentUserId, userRequest);
+            
+            // 3. 💡 [성공 시] 팝업창을 띄우고 로그인 페이지로 이동시키는 스크립트용 템플릿 리턴
+            model.addAttribute("msg", "비밀번호가 변경되었습니다. 다시 로그인해주세요.");
+            model.addAttribute("url", "/login"); 
+            return "common/alert";
+
+        } catch (Exception e) {
+            System.out.println("❌ 비즈니스 로직 예외 발생: " + e.getMessage());
+            // 현재 비밀번호 불일치 등의 에러가 나면, 메시지를 안고 비밀번호 변경 페이지로 되돌아갑니다.
+            model.addAttribute("errorMessage", e.getMessage());
+            return "mypage/chg_password"; 
         }
-
-        var loginUser = (User) session.getAttribute("loginUser");
-
-        // TODO: 현재 비밀번호가 맞는지 DB 검증 및 새 비밀번호 암호화 변경 로직 필요
-        // 현재 비밀번호 확인
-        boolean isMatched =
-                userService.checkPassword(
-                        loginUser.getId(),
-                        currentPassword
-                );
-
-        if (!isMatched) {
-            return "WRONG_PASSWORD";
-        }
-
-
-        userService.updatePassword(
-                loginUser.getId(),
-                newPassword
-        );
-
-        return "SUCCESS";
     }
     
     /**
      * 비밀번호 찾기 화면 이동
-     * 주소: http://localhost:8080/find-password
      */
     @GetMapping("/find_password")
     public String findPasswordForm() {
-        return "find-password"; // templates/find-password.html 을 엽니다.
+        return "find-password"; 
     }
 
     /**
