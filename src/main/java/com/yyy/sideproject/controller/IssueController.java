@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.yyy.sideproject.domain.Issue;
+import com.yyy.sideproject.domain.TestCase;
 import com.yyy.sideproject.dto.IssueRequest;
+import com.yyy.sideproject.repository.TestCaseRepository;
 import com.yyy.sideproject.service.IssueService;
 
 import jakarta.servlet.http.HttpSession; // 💡 이 import 문이 반드시 있어야 합니다!
@@ -24,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class IssueController {
 
     private final IssueService issueService;
+    private final TestCaseRepository testCaseRepository;
 
     // 폼 화면을 보여주는 메서드 (여기에 세션 테스트 코드가 들어갔습니다)
     @GetMapping("/register")
@@ -71,9 +74,7 @@ public class IssueController {
         return "issue/list"; 
     }
     
-    
- // 🌟 새로 추가할 부분: 상세 조회 화면 처리
-    // {id}는 URL 경로에 있는 숫자를 변수로 받겠다는 뜻입니다.
+ // 상세 조회 화면 처리
     @GetMapping("/{id}")
     public String showIssueDetail(@PathVariable("id") Long id, Model model) {
         // 1. Service를 통해 해당 ID의 과제 정보를 가져옵니다.
@@ -82,7 +83,11 @@ public class IssueController {
         // 2. 화면에서 쓸 수 있게 모델에 담습니다.
         model.addAttribute("issue", issue);
         
-        // 3. templates/issue 폴더 안의 detail.html을 보여줍니다.
+        // 🌟 3. 새롭게 추가된 로직: 이 과제(id)에 속한 TC 목록을 DB에서 가져와서 모델에 담기
+        List<TestCase> testCases = testCaseRepository.findByIssueIdOrderByIdAsc(id);
+        model.addAttribute("testCases", testCases);
+        
+        // 4. templates/issue 폴더 안의 detail.html을 보여줍니다.
         return "issue/detail";
     }
 }

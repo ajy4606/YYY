@@ -35,4 +35,16 @@ public class TestCaseController {
         // 주의: 기존 과제 상세 페이지 URL 패턴에 맞게 수정이 필요할 수 있습니다.
         return "redirect:/issues/" + issueId;
     }
+
+    @PostMapping("/{tcId}/status")
+    @ResponseBody // 화면을 이동하지 않고 데이터(텍스트)만 응답하겠다는 뜻입니다.
+    public String updateStatus(@PathVariable Long issueId, 
+                               @PathVariable Long tcId, 
+                               @RequestParam String status) {
+        // 1. 서비스 로직 호출해서 상태 변경
+        testCaseService.updateTestCaseStatus(tcId, status);
+        
+        // 2. 자바스크립트에게 성공했다는 신호 반환
+        return "OK";
+    }
 }

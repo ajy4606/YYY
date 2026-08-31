@@ -1,75 +1,177 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>과제 상세 정보</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 40px; }
-        .detail-box { border: 1px solid #ddd; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
-        .detail-row { margin-bottom: 10px; }
-        .label { font-weight: bold; display: inline-block; width: 120px; }
-        .btn-back { padding: 10px 15px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 5px; display: inline-block; margin-bottom: 20px; }
-    </style>
+<meta charset="UTF-8">
+<title>과제 상세 정보</title>
+<style>
+body {
+	font-family: Arial, sans-serif;
+	margin: 40px;
+}
+
+.detail-box {
+	border: 1px solid #ddd;
+	padding: 20px;
+	border-radius: 5px;
+	margin-bottom: 20px;
+}
+
+.detail-row {
+	margin-bottom: 10px;
+}
+
+.label {
+	font-weight: bold;
+	display: inline-block;
+	width: 120px;
+}
+
+.btn-back {
+	padding: 10px 15px;
+	background-color: #6c757d;
+	color: white;
+	text-decoration: none;
+	border-radius: 5px;
+	display: inline-block;
+	margin-bottom: 20px;
+}
+</style>
 </head>
 <body>
 
-    <h2>🔍 과제 상세 정보</h2>
+	<h2>🔍 과제 상세 정보</h2>
 
-    <div class="detail-box">
-        <div class="detail-row"><span class="label">과제 번호(ID):</span> <span th:text="${issue.id}"></span></div>
-        <div class="detail-row"><span class="label">제목:</span> <strong th:text="${issue.title}"></strong></div>
-        <div class="detail-row"><span class="label">중요도:</span> <span th:text="${issue.severity}"></span></div>
-        <div class="detail-row"><span class="label">상태:</span> <span th:text="${issue.status}"></span></div>
-        <div class="detail-row"><span class="label">보고자 ID:</span> <span th:text="${issue.reporterId}"></span></div>
-        <div class="detail-row"><span class="label">담당자 ID:</span> <span th:text="${issue.assigneeId}"></span></div>
-        <div class="detail-row"><span class="label">등록일시:</span> <span th:text="${#temporals.format(issue.createdAt, 'yyyy-MM-dd HH:mm')}"></span></div>
-        
-        <hr>
-        <div class="detail-row">
-            <span class="label">상세 설명:</span>
-            <pre style="margin-top: 10px; padding: 15px; background-color: #f8f9fa; border: 1px solid #eee;" th:text="${issue.description}"></pre>
-        </div>
-    </div>
+	<div class="detail-box">
+		<div class="detail-row">
+			<span class="label">과제 번호(ID):</span> <span th:text="${issue.id}"></span>
+		</div>
+		<div class="detail-row">
+			<span class="label">제목:</span> <strong th:text="${issue.title}"></strong>
+		</div>
+		<div class="detail-row">
+			<span class="label">중요도:</span> <span th:text="${issue.severity}"></span>
+		</div>
+		<div class="detail-row">
+			<span class="label">상태:</span> <span th:text="${issue.status}"></span>
+		</div>
+		<div class="detail-row">
+			<span class="label">보고자 ID:</span> <span
+				th:text="${issue.reporterId}"></span>
+		</div>
+		<div class="detail-row">
+			<span class="label">담당자 ID:</span> <span
+				th:text="${issue.assigneeId}"></span>
+		</div>
+		<div class="detail-row">
+			<span class="label">등록일시:</span> <span
+				th:text="${#temporals.format(issue.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+		</div>
 
-    <a th:href="@{/issues/list}" class="btn-back">목록으로 돌아가기</a>
+		<hr>
+		<div class="detail-row">
+			<span class="label">상세 설명:</span>
+			<pre
+				style="margin-top: 10px; padding: 15px; background-color: #f8f9fa; border: 1px solid #eee;"
+				th:text="${issue.description}"></pre>
+		</div>
+	</div>
 
-    <!-- 1. 엑셀 업로드 성공/실패 알림 배너 -->
-    <div th:if="${message}" style="padding: 10px 15px; margin-bottom: 15px; background-color: #d1e7dd; color: #0f5132; border: 1px solid #badbcc; border-radius: 4px;" th:text="${message}"></div>
-    <div th:if="${errorMessage}" style="padding: 10px 15px; margin-bottom: 15px; background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7; border-radius: 4px;" th:text="${errorMessage}"></div>
+	<a th:href="@{/issues/list}" class="btn-back">목록으로 돌아가기</a>
 
-    <!-- 2. 엑셀 파일 업로드 폼 -->
-    <div style="padding: 20px; border: 1px solid #ddd; background-color: #f9f9f9; border-radius: 5px;">
-        <h3 style="margin-top: 0;">테스트 케이스(TC) 일괄 등록</h3>
-        <p style="font-size: 13px; color: #666;">* 지정된 엑셀 템플릿 파일(.xlsx)만 업로드 가능합니다.</p>
-        
-        <form th:action="@{/issues/{id}/testcases/upload(id=${issue.id})}" method="post" enctype="multipart/form-data">
-            <input type="file" name="file" accept=".xlsx, .xls" required style="margin-right: 10px;" />
-            <button type="submit" style="padding: 5px 15px; cursor: pointer;">엑셀 업로드</button>
-        </form>
-    </div>
+	<!-- 1. 엑셀 업로드 성공/실패 알림 배너 -->
+	<div th:if="${message}"
+		style="padding: 10px 15px; margin-bottom: 15px; background-color: #d1e7dd; color: #0f5132; border: 1px solid #badbcc; border-radius: 4px;"
+		th:text="${message}"></div>
+	<div th:if="${errorMessage}"
+		style="padding: 10px 15px; margin-bottom: 15px; background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7; border-radius: 4px;"
+		th:text="${errorMessage}"></div>
 
-    <!-- 3. 업로드된 TC 목록 영역 -->
-    <div style="margin-top: 30px;">
-        <h3>등록된 테스트 케이스 목록</h3>
-        <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
-            <thead style="background-color: #eee;">
-                <tr>
-                    <th style="padding: 10px;">번호</th>
-                    <th style="padding: 10px;">분류</th>
-                    <th style="padding: 10px;">시나리오</th>
-                    <th style="padding: 10px;">기대 결과</th>
-                    <th style="padding: 10px; text-align: center;">상태</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td colspan="5" style="padding: 20px; text-align: center; color: #888;">
-                        아직 등록된 테스트 케이스가 없습니다. 엑셀 파일을 업로드해 주세요!
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+	<!-- 2. 엑셀 파일 업로드 폼 -->
+	<div
+		style="padding: 20px; border: 1px solid #ddd; background-color: #f9f9f9; border-radius: 5px;">
+		<h3 style="margin-top: 0;">테스트 케이스(TC) 일괄 등록</h3>
+		<p style="font-size: 13px; color: #666;">* 지정된 엑셀 템플릿 파일(.xlsx)만
+			업로드 가능합니다.</p>
 
+		<form th:action="@{/issues/{id}/testcases/upload(id=${issue.id})}"
+			method="post" enctype="multipart/form-data">
+			<input type="file" name="file" accept=".xlsx, .xls" required
+				style="margin-right: 10px;" />
+			<button type="submit" style="padding: 5px 15px; cursor: pointer;">엑셀
+				업로드</button>
+		</form>
+	</div>
+
+	<!-- 3. 업로드된 TC 목록 영역 -->
+	<div style="margin-top: 30px;">
+		<h3>등록된 테스트 케이스 목록</h3>
+		<table border="1"
+			style="width: 100%; border-collapse: collapse; text-align: left;">
+			<thead style="background-color: #eee;">
+				<tr>
+					<th style="padding: 10px;">번호</th>
+					<th style="padding: 10px;">분류</th>
+					<th style="padding: 10px;">시나리오</th>
+					<th style="padding: 10px;">기대 결과</th>
+					<th style="padding: 10px; text-align: center;">상태</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- 1. 데이터가 없을 때 띄워줄 안내 문구 -->
+				<tr th:if="${#lists.isEmpty(testCases)}">
+					<td colspan="5"
+						style="padding: 20px; text-align: center; color: #888;">아직
+						등록된 테스트 케이스가 없습니다. 엑셀 파일을 업로드해 주세요!</td>
+				</tr>
+
+				<!-- 2. 데이터가 있을 때 목록을 쭉 그려주는 반복문 -->
+				<tr th:each="tc, stat : ${testCases}">
+					<!-- stat.count는 1번부터 자동으로 번호를 매겨줍니다 -->
+					<td style="padding: 10px; text-align: center;"
+						th:text="${stat.count}">1</td>
+					<td style="padding: 10px;" th:text="${tc.tcCategory}">분류</td>
+					<td style="padding: 10px;" th:text="${tc.tcDescription}">시나리오</td>
+					<td style="padding: 10px;" th:text="${tc.expectedResult}">기대
+						결과</td>
+					<!-- 상태 값 표시 -->
+					<!-- <td style="padding: 10px; text-align: center; font-weight: bold; color: #666;" th:text="${tc.status}">UNTESTED</td> -->
+					<!-- 변경할 코드: 라디오 버튼으로 성공/실패 선택 -->
+					<td style="padding: 10px; text-align: center;"><label
+						style="margin-right: 10px; cursor: pointer; color: #0d6efd; font-weight: bold;">
+							<input type="radio" th:name="'tc_status_' + ${tc.id}"
+							value="SUCCESS" th:checked="${tc.status == 'SUCCESS'}"
+							th:onclick="|updateStatus(${issue.id}, ${tc.id}, 'SUCCESS')|">
+							성공
+					</label> <label style="cursor: pointer; color: #dc3545; font-weight: bold;">
+							<input type="radio" th:name="'tc_status_' + ${tc.id}"
+							value="FAIL" th:checked="${tc.status == 'FAIL'}"
+							th:onclick="|updateStatus(${issue.id}, ${tc.id}, 'FAIL')|">
+							실패
+					</label>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<!-- 자바스크립트 추가 -->
+	<script>
+    function updateStatus(issueId, tcId, newStatus) {
+        // 백엔드 컨트롤러로 상태 업데이트 요청을 보냄
+        fetch(`/issues/${issueId}/testcases/${tcId}/status`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'status=' + newStatus
+        })
+        .then(response => {
+            if (!response.ok) {
+                alert('상태 업데이트에 실패했습니다.');
+            } else {
+                console.log(tcId + '번 TC 상태 업데이트 성공: ' + newStatus);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
 </body>
 </html>
