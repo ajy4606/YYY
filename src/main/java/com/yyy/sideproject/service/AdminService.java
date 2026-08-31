@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.yyy.sideproject.domain.User;
+import com.yyy.sideproject.domain.UserJdbcEntity;
 import com.yyy.sideproject.repository.AdminRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ public class AdminService {
 	
 	private final AdminRepository adminRepository;
 	
-	public List<User> selectUserAll() {
+	public List<UserJdbcEntity> selectUserAll() {
 		return adminRepository.selectUserAll();
 	}
 
