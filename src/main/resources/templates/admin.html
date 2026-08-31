@@ -12,8 +12,43 @@
 </head>
 <body>
 
+<script>
+    const countButton = document.getElementById('user-count-button');
+    const countResult = document.getElementById('user-count-result');
+
+    countButton.addEventListener('click', async () => {
+        countButton.disabled = true;
+        countResult.textContent = '조회 중입니다...';
+
+        try {
+            // 1. 페이지 이동 없이 컨트롤러에 GET 요청을 보낸다.
+            const response = await fetch(countButton.dataset.url, {
+                headers: { 'Accept': 'application/json' }
+            });
+            // fetch는 HTTP 4xx/5xx 응답을 자동으로 예외 처리하지 않는다.
+            if (!response.ok) {
+                throw new Error(`회원 수 조회 실패: HTTP ${response.status}`);
+            }
+
+            // 2. JSON 응답 { "count": 3 }을 자바스크립트 객체로 변환한다.
+            const data = await response.json();
+            // 3. HTML을 삽입하지 않고 텍스트만 갱신한다.
+            countResult.textContent = `현재 회원 수는 ${data.count}명입니다.`;
+        } catch (error) {
+            countResult.textContent = '회원 수를 불러오지 못했습니다. 다시 시도해 주세요.';
+            console.error(error);
+        } finally {
+            countButton.disabled = false;
+        }
+    });
+</script>
+
 	<div class ="container">
 		<h1>관리자 페이지</h1>
+		<!-- 기존 목록은 그대로 두고, 회원 수만 AJAX로 조회하는 예제 -->
+		<button type="button" id="user-count-button"
+		        th:data-url="@{/admin/user-count}">회원 수 확인</button>
+		<p id="user-count-result" role="status" aria-live="polite"></p>
 	
 	
 <table>

@@ -16,38 +16,31 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Table("USERS")
-public class User {
+public class UserJdbcEntity {
 
     @Id
     @Column("ID")
     private Long id;
     
-    @Id
     @Column("NAME")
     private String name;
     
-    @Id
     @Column("EMAIL")
     private String email;
     
-    @Id
     @Column("PASSWORD")
     private String password;
     
-    @Id
     @Column("ROLE")
     private String role;
     
-    @Id
-    @Column("CREATEDAT")
+    @Column("CREATED_AT")
     private LocalDateTime createdAt;
     
-    @Id
-    @Column("CHAGNEDT")
+    @Column("CHANGE_DT")
     private LocalDateTime changeDt;
     
-    @Builder
-    public User(Long id, String name, String email, String password, String role, LocalDateTime changeDt) {
+    public UserJdbcEntity(Long id, String name, String email, String password, String role, LocalDateTime changeDt) {
     	this.id = id;
     	this.name = name;
     	this.email = email;

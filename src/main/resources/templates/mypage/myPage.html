@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>마이 페이지</title>
+    <style>
+        /* 💡 마이페이지가 열리는 동안 부모 프레임 전체의 스크롤바를 강제로 숨깁니다. */
+        html, body {
+            overflow: hidden !important;
+        }
+
+        .mypage-wrapper { 
+            text-align: center; 
+            padding: 5px 0; 
+            width: 100%;
+            height: auto;
+            overflow: hidden !important; /* 내부 스크롤 절대 방지 */
+        }
+
+        /* 💡 세로 길이를 대폭 더 줄여서 컴팩트하게 만들었습니다. */
+        .mypage-container { 
+            background: white; 
+            padding: 20px 30px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
+            display: inline-block; 
+            width: 100%;
+            max-width: 360px; 
+            box-sizing: border-box; 
+        }
+        .mypage-container h1 { 
+            color: #333; 
+            margin-bottom: 15px; 
+            margin-top: 0; 
+            font-size: 1.4rem; 
+        }
+        
+        /* 정보 표시 영역 */
+        .info-box { 
+            text-align: left; 
+            margin-bottom: 15px; 
+            padding: 12px 18px; 
+            background-color: #fcfcfc; 
+            border: 1px solid #eee; 
+            border-radius: 4px; 
+        }
+        .info-item { margin-bottom: 6px; font-size: 0.9rem; color: #555; }
+        .info-item:last-child { margin-bottom: 0; }
+        .info-label { font-weight: bold; color: #333; width: 65px; display: inline-block; }
+
+        /* 버튼 스타일 - 높이 및 마진 추가 축소 */
+        .btn { 
+            display: block; 
+            width: 100%; 
+            padding: 8px 0; 
+            margin: 6px 0; 
+            border-radius: 4px; 
+            text-decoration: none; 
+            font-size: 13px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            border: none; 
+            box-sizing: border-box; 
+        }
+        .btn-primary { background-color: #007bff; color: white; }
+        .btn-info { background-color: #17a2b8; color: white; }
+        .btn-danger { background-color: #dc3545; color: white; }
+        .btn-back { background-color: #6c757d; color: white; margin-top: 10px; }
+        
+        .btn:hover { opacity: 0.9; }
+    </style>
+</head>
+<body>
+
+    <div class="mypage-wrapper">
+        <div class="mypage-container">
+            <h1>👤 마이 페이지</h1>
+
+            <div class="info-box" th:if="${user != null}">
+                <div class="info-item">
+                    <span class="info-label">이름</span>
+                    <span th:text="${user.name}">홍길동</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">이메일</span>
+                    <span th:text="${user.email}">example@email.com</span>
+                </div>
+            </div>
+
+            <div class="action-box">
+                <button class="btn btn-primary" onclick="loadContent('/mypage/chg_email')">이메일 변경</button>
+                <button class="btn btn-info" onclick="loadContent('/mypage/chg_password')">비밀번호 변경</button>
+                
+                <a th:href="@{/mypage/withdraw}" class="btn btn-danger" 
+                   onclick="return confirm('정말로 탈퇴하시겠습니까? 모든 정보가 삭제됩니다.');">회원 탈퇴</a>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid #eee; margin: 10px 0;">
+
+            <a th:href="@{/main}" class="btn btn-back">메인으로 돌아가기</a>
+        </div>
+    </div>
+
+    <!-- 💡 혹시 CSS만으로 해결되지 않을 경우를 대비해, 부모창의 스크롤바를 자바스크립트로 강제 제거합니다. -->
+    <script>
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
+        
+        // 메인 페이지의 특정 콘텐츠 박스(#content)가 범인일 경우를 대비해 스크롤을 지웁니다.
+        const parentContent = window.parent.document.getElementById('content') || document.getElementById('content');
+        if (parentContent) {
+            parentContent.style.overflow = 'hidden';
+        }
+    </script>
+</body>
+</html>
