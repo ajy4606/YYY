@@ -1,66 +1,435 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>회원 목록</title>
-    <style>
-        table { width: 50%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #ccc; padding: 10px; text-align: center; }
-        th { background-color: #eee; }
-        
-        /* 🔍 검색창 구역 디자인 추가 */
-        .search-container { width: 50%; margin-bottom: 15px; text-align: left; }
-        .search-select, .search-input { padding: 6px; font-size: 14px; }
-        .search-input { width: 200px; }
-        .btn-search { padding: 6px 12px; background-color: #555; color: white; border: none; cursor: pointer; }
-        .btn-search:hover { background-color: #333; }
-        
-        .navigation-container { width: 50%; margin-top: 15px; text-align: right; }
-    </style>
-</head>
-<body>
-    <h1>가입된 회원 목록</h1>
+<style>
+    /* =========================
+       회원 목록 화면
+       ========================= */
+
+    .users-page {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* 페이지 제목 */
+    .users-title {
+        font-size: 1.5rem;
+        color: #212529;
+        font-weight: 700;
+        margin: 0 0 25px 0;
+    }
+
+    /* =========================
+       검색 영역
+       ========================= */
+
+    .search-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .search-form {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+    }
+
+    .search-select {
+        height: 40px;
+        padding: 0 12px;
+        font-size: 0.9rem;
+
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+
+        background-color: #fff;
+        color: #495057;
+
+        outline: none;
+        cursor: pointer;
+    }
+
+    .search-select:focus {
+        border-color: #007bff;
+    }
+
+    .search-input {
+        height: 40px;
+        width: 260px;
+
+        box-sizing: border-box;
+
+        padding: 0 12px;
+
+        font-size: 0.9rem;
+
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+
+        outline: none;
+
+        transition: border-color 0.2s ease;
+    }
+
+    .search-input:focus {
+        border-color: #007bff;
+    }
+
+    .search-input::placeholder {
+        color: #adb5bd;
+    }
+
+    /* 검색 버튼 */
+    .btn-search {
+        height: 40px;
+
+        padding: 0 18px;
+
+        background-color: #007bff;
+        color: white;
+
+        border: none;
+        border-radius: 6px;
+
+        font-size: 0.9rem;
+        font-weight: 500;
+
+        cursor: pointer;
+
+        transition: background-color 0.2s ease;
+    }
+
+    .btn-search:hover {
+        background-color: #0056b3;
+    }
+
+    /* =========================
+       회원 테이블
+       ========================= */
+
+    .table-wrapper {
+        width: 100%;
+        background-color: #ffffff;
+
+        border-radius: 8px;
+
+        overflow: hidden;
+
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .user-table {
+        width: 100%;
+
+        border-collapse: collapse;
+
+        table-layout: fixed;
+    }
+
+    /* 테이블 헤더 */
+    .user-table th {
+        height: 48px;
+
+        background-color: #f8f9fa;
+
+        color: #495057;
+
+        font-size: 0.9rem;
+        font-weight: 600;
+
+        text-align: center;
+
+        border-bottom: 2px solid #edf2f7;
+    }
+
+    /* 테이블 데이터 */
+    .user-table td {
+        height: 48px;
+
+        padding: 8px 14px;
+
+        color: #4a5568;
+
+        font-size: 0.9rem;
+
+        text-align: center;
+
+        border-bottom: 1px solid #edf2f7;
+
+        box-sizing: border-box;
+    }
+
+    .user-table tbody tr {
+        transition: background-color 0.15s ease;
+    }
+
+    .user-table tbody tr:hover {
+        background-color: #f8fbff;
+    }
+
+    .user-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    /* 회원번호 */
+    .user-id {
+        font-weight: 600;
+        color: #2d3748 !important;
+    }
+
+    /* 이메일 */
+    .user-email {
+        color: #718096 !important;
+    }
+
+    /* 권한 */
+    .role-badge {
+        display: inline-block;
+
+        padding: 4px 9px;
+
+        border-radius: 5px;
+
+        background-color: #e2e8f0;
+
+        color: #4a5568;
+
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    /* =========================
+       검색 결과 없음
+       ========================= */
+
+    .empty-msg {
+        width: 100%;
+
+        box-sizing: border-box;
+
+        padding: 60px 0;
+
+        color: #a0aec0;
+
+        text-align: center;
+
+        font-size: 0.95rem;
+
+        background-color: #ffffff;
+
+        border-radius: 8px;
+
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    /* =========================
+       반응형
+       ========================= */
+
+    @media (max-width: 768px) {
+
+        .search-form {
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            width: 200px;
+        }
+
+        .user-table th,
+        .user-table td {
+            padding: 8px 5px;
+            font-size: 0.8rem;
+        }
+    }
+</style>
+
+
+<!-- =========================
+     회원 목록 본문
+     ========================= -->
+
+<div class="users-page">
+
+    <!-- 제목 -->
+    <h2 class="users-title">
+        👤 가입된 회원 목록
+    </h2>
+
+
+    <!-- =========================
+         검색 영역
+         ========================= -->
 
     <div class="search-container">
-		<form method="get">
-		    <select name="searchType" class="search-select">
-				<option value="all" th:selected="${param.searchType == 'all'}">전체</option>
-				<option value="id" th:selected="${param.searchType == 'id'}">회원번호</option>
-		        <option value="name" th:selected="${param.searchType == 'name'}">이름</option>
-		    </select>
-		    <input type="text" name="keyword" class="search-input" th:value="${param.keyword}">
-		    <button type="submit" class="btn-search">검색</button>
-		</form>
+
+        <form onsubmit="searchUsers(event)" class="search-form">
+
+            <!-- 검색 조건 -->
+            <select
+                id="searchType"
+                name="searchType"
+                class="search-select">
+
+                <option
+                    value="all"
+                    th:selected="${param.searchType == 'all'}">
+                    전체
+                </option>
+
+                <option
+                    value="id"
+                    th:selected="${param.searchType == 'id'}">
+                    회원번호
+                </option>
+
+                <option
+                    value="name"
+                    th:selected="${param.searchType == 'name'}">
+                    이름
+                </option>
+
+            </select>
+
+
+            <!-- 검색어 -->
+            <input
+                type="text"
+                id="keyword"
+                name="keyword"
+                class="search-input"
+                th:value="${param.keyword}"
+                placeholder="검색어를 입력하세요...">
+
+
+            <!-- 검색 버튼 -->
+            <button
+                type="submit"
+                class="btn-search">
+                검색
+            </button>
+
+        </form>
+
     </div>
 
-    <p th:if="${#lists.isEmpty(userList)}">현재 가입된 회원이 없거나 검색 결과가 없습니다.</p>
 
-    <table th:unless="${#lists.isEmpty(userList)}">
-        <thead>
-            <tr>
-                <th>회원번호(ID)</th>
-                <th>이름</th>
-                <th>이메일</th>
-                <th>권한</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="user : ${userList}">
-                <td th:text="${user.id}"></td>
-                <td th:text="${user.name}"></td>
-                <td th:text="${user.email}"></td>
-                <td th:text="${user.role}"></td>
-            </tr>
-        </tbody>
-    </table>
+    <!-- =========================
+         검색 결과 없음
+         ========================= -->
 
-    <div class="navigation-container">
-        <button type="button" class="btn btn-primary" 
-                th:onclick="|location.href='@{/login}'|">로그인 페이지로</button>
+    <div
+        th:if="${#lists.isEmpty(userList)}"
+        class="empty-msg">
+
+        현재 가입된 회원이 없거나 검색 결과가 없습니다.
+
     </div>
-	<div class="navigation-container">
-	    <button type="button" class="btn btn-primary" 
-	            th:onclick="|location.href='@{/main}'|">메인페이지</button>
-	</div>
-</body>
-</html>
+
+
+    <!-- =========================
+         회원 목록
+         ========================= -->
+
+    <div
+        th:unless="${#lists.isEmpty(userList)}"
+        class="table-wrapper">
+
+        <table class="user-table">
+
+            <thead>
+                <tr>
+                    <th>회원번호(ID)</th>
+                    <th>이름</th>
+                    <th>이메일</th>
+                    <th>권한</th>
+                </tr>
+            </thead>
+
+
+            <tbody>
+
+                <tr th:each="user : ${userList}">
+
+                    <!-- 회원번호 -->
+                    <td
+                        th:text="${user.id}"
+                        class="user-id">
+                    </td>
+
+
+                    <!-- 이름 -->
+                    <td
+                        th:text="${user.name}">
+                    </td>
+
+
+                    <!-- 이메일 -->
+                    <td
+                        th:text="${user.email}"
+                        class="user-email">
+                    </td>
+
+
+                    <!-- 권한 -->
+                    <td>
+
+                        <span
+                            th:text="${user.role}"
+                            class="role-badge">
+                        </span>
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    function searchUsers(event) {
+
+        event.preventDefault();
+
+        const type =
+            document.getElementById('searchType').value;
+
+        const keyword =
+            document.getElementById('keyword').value;
+
+
+        /*
+         * 검색 URL 생성
+         *
+         * 예:
+         * /users?searchType=name&keyword=홍길동
+         */
+        const url =
+            `/users?searchType=${type}&keyword=${encodeURIComponent(keyword)}`;
+
+
+        /*
+         * main.html에 있는 loadContent() 사용
+         *
+         * user_list.html 자체에서는
+         * 메뉴바를 다시 만들지 않습니다.
+         */
+        if (typeof loadContent === 'function') {
+
+            loadContent(url);
+
+        } else {
+
+            location.href = url;
+
+        }
+
+    }
+
+</script>

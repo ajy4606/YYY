@@ -18,5 +18,12 @@ public interface UserMapper {
 
 	// FAQ 작성자 검증용: id로 회원 단건 조회 (없으면 null)
 	UserResponse findById(@Param("id") Long id);
+	
+	//비밀번호 변경
+	void updatePassword(UserRequest userRequest);
+	String findPasswordById(Long id);
+	
+	//이메일 변경
+	void updateEmail(UserRequest userRequest);
 
 }
