@@ -1,42 +1,49 @@
 package com.yyy.sideproject.domain;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-@Entity
-@Getter
-@Setter
-@Table(name = "users")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@Builder
+@Data
+@NoArgsConstructor
+@Table("USERS")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column("ID")
     private Long id;
     
-    @Column
+    @Id
+    @Column("NAME")
     private String name;
     
-    @Column
+    @Id
+    @Column("EMAIL")
     private String email;
     
-    @Column
+    @Id
+    @Column("PASSWORD")
     private String password;
     
-    @Column
+    @Id
+    @Column("ROLE")
     private String role;
     
-    @Column
+    @Id
+    @Column("CREATEDAT")
     private LocalDateTime createdAt;
     
-    @Column
+    @Id
+    @Column("CHAGNEDT")
     private LocalDateTime changeDt;
     
     @Builder
