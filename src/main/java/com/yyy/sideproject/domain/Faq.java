@@ -1,52 +1,59 @@
 package com.yyy.sideproject.domain;
 
-import jakarta.persistence.*;
-import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
 
 import java.time.LocalDateTime;
 
-
-@Entity
-@Table(name = "faq")
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
+@Data
+@NoArgsConstructor
+@Table("FAQ")
 public class Faq {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column("ID")
 	private Long id;
 	
-	@Column(nullable = false, length = 50)
+	@Column("USER_ID")
+	private Long user_id;
+	
+	@Column("CATEGORY")
 	private String category;
 	
-	@Column(nullable = false, length = 250)
+	@Column("TITLE")
 	private String title;
 	
-	@Column(nullable = false, columnDefinition = "TEXT")
+	@Column("CONTENT")
 	private String content;
 	
-	@Column(nullable = false)
+	@Column("AUTHOR")
 	private String author;
 	//회원 테이블 나중에 조인여부 확인해보기
 	
-	@Column(nullable = false)
+	@Column("IS_SECRET")
 	private boolean isSecret;
 	
-	@Column(length = 100)
+	@Column("PASSWORD")
 	private String password;
 	
-	@Column(nullable = false, updatable = false)
+	@Column("CREATED_AT")
 	private LocalDateTime createdAt;
 	
-	@Column
+	@Column("UPDATED_AT")
 	private LocalDateTime updatedAt;
 	
 	
 	@Builder
-	public Faq(String category, String title, String content, String author, boolean isSecret, String password) {
+	public Faq(Long user_id, String category, String title, String content, String author, boolean isSecret, String password) {
+		this.user_id = user_id;
 		this.category = category;
 		this.title = title;
 		this.content = content;
