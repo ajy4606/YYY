@@ -3,12 +3,9 @@ package com.yyy.sideproject.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.yyy.sideproject.domain.Faq;
 import com.yyy.sideproject.dto.FaqRequestDto;
 import com.yyy.sideproject.dto.UserResponse;
-import com.yyy.sideproject.mapper.UserMapper;
 import com.yyy.sideproject.repository.FaqRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -18,31 +15,30 @@ import lombok.RequiredArgsConstructor;
 public class FaqService {
 
     private final FaqRepository faqRepository;
-    private final UserMapper userMapper; // 팀원이 변경한 방식으로 적용
+    
+    public UserResponse selectUserbyId(Long user_id) {
+    	return faqRepository.selectUserbyId(user_id);
+    }
 
-    @Transactional
-    public Long createFaq(FaqRequestDto requestDto) {
-
-        // userId 검증 후, 매핑된 회원 이름을 작성자로 저장한다.
-        UserResponse user = userMapper.findById(requestDto.getUserId());
-        if (user == null) {
-            throw new IllegalArgumentException(
-                    "존재하지 않는 회원입니다. id=" + requestDto.getUserId());
-        }
-
-        Faq faq = requestDto.toEntity(user.getName());
-
-        Faq savedFaq = faqRepository.save(faq);
-
-        return savedFaq.getId();
+    public int insertFaq(FaqRequestDto dto) {	
+        return faqRepository.insertFaq(	dto.getUser_id(),
+        								dto.getCategory(),
+        								dto.getTitle(),
+        								dto.getAuthor(),
+        								dto.getContent(),
+        								dto.is_secret(),
+        								dto.getPassword());
     }
     
-    public List<Faq> getAllFaqs() {
-        return faqRepository.findAll();
+    public List<Faq> selectFaqAll() {
+        return faqRepository.selectFaqAll();
     }
 
-    public Faq getFaq(Long id) {
-        return faqRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 FAQ가 존재하지 않습니다. id=" + id));
+    public Faq selectFaqbyId(Long id) {
+        return faqRepository.selectFaqbyId(id);
     }
 }
+
+
+
+
