@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.yyy.sideproject.dto.UserRequest;
+import com.yyy.sideproject.dto.UserRequestDTO;
 import com.yyy.sideproject.dto.UserResponse;
 import com.yyy.sideproject.service.UserService;
 
@@ -106,18 +106,87 @@ public class UserController {
 
 	// 사용자 목록
 	@GetMapping("/users")
-	public String getUserList(UserResponse userSearch, Model model) {
+	public String getUserList(
+	        @RequestParam(name = "searchType", required = false, defaultValue = "all") String searchType,
+	        @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
+	        Model model) {
 
-		if (userSearch == null) {
-			userSearch = new UserResponse();
-		}
+	    // 검색어 앞뒤 공백 제거
+	    keyword = keyword.trim();
 
-		List<UserResponse> list = userService.getUserList(userSearch);
+	    UserResponse userSearch = new UserResponse();
 
-		model.addAttribute("userList", list);
+	    // 회원번호 검색
+	    if ("id".equals(searchType)) {
 
-		return "user_List";
+	        if (!keyword.isEmpty()) {
+
+	            try {
+
+	                Long id = Long.parseLong(keyword);
+	                userSearch.setId(id);
+
+	            } catch (NumberFormatException e) {
+
+	                // 회원번호에 숫자가 아닌 값을 입력한 경우
+	                model.addAttribute("userList", List.of());
+	                model.addAttribute("searchType", searchType);
+	                model.addAttribute("keyword", keyword);
+
+	                return "user_List";
+	            }
+	        }
+	    }
+
+	    // 이름 검색
+	    else if ("name".equals(searchType)) {
+
+	        if (!keyword.isEmpty()) {
+	            userSearch.setName(keyword);
+	        }
+	    }
+
+	    // 전체 검색
+	    else if ("all".equals(searchType)) {
+
+	        // 검색 조건 없이 전체 회원 조회
+	    }
+
+	    // 잘못된 검색 조건이 들어온 경우
+	    else {
+
+	        searchType = "all";
+	    }
+
+
+	    // 회원 목록 조회
+	    List<UserResponse> list = userService.getUserList(userSearch);
+
+	    // 화면에 전달
+	    model.addAttribute("userList", list);
+
+	    // 검색 조건 유지
+	    model.addAttribute("searchType", searchType);
+
+	    // 검색어 유지
+	    model.addAttribute("keyword", keyword);
+
+	    return "user_List";
 	}
+//	// 사용자 목록
+//	@GetMapping("/users")
+//	public String getUserList(UserResponse userSearch, Model model) {
+//
+//		if (userSearch == null) {
+//			userSearch = new UserResponse();
+//		}
+//
+//		List<UserResponse> list = userService.getUserList(userSearch);
+//
+//		model.addAttribute("userList", list);
+//
+//		return "user_List";
+//	}
 
 	// 회원가입
 	@GetMapping("/signUp")
@@ -126,7 +195,7 @@ public class UserController {
 	}
 
 	@PostMapping("/saveUser")
-	public String saveUserProcess(UserRequest userRequest) {
+	public String saveUserProcess(UserRequestDTO userRequest) {
 		userService.createUser(userRequest);
 
 		return "redirect:/users";
@@ -204,7 +273,7 @@ public class UserController {
      * 5. 비밀번호 변경 기능 처리 (일반 Form POST 전송)
      */
     @PostMapping("/users/mypage/chg_password") 
-    public String changePassword(@ModelAttribute UserRequest userRequest, HttpServletRequest request, Model model) {
+    public String changePassword(@ModelAttribute UserRequestDTO userRequest, HttpServletRequest request, Model model) {
         try {
             // 1. 세션에서 로그인 회원 정보 조회
             HttpSession session = request.getSession(false);
