@@ -14,5 +14,11 @@ public interface AdminRepository extends CrudRepository<UserJdbcEntity,Long> {
 	
 	@Query(AdminSql.SELECT_USERS_ALL)
 	List<UserJdbcEntity> selectUserAll();
+	
+	@Query(AdminSql.SELECT_USER_COUNT)
+	int selectUserCount();
+	
+	@Query(AdminSql.UPDATE_USER_PWD)
+	int updateUserPwd(String userId);
 
 }

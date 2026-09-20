@@ -13,12 +13,14 @@
 <body>
 
 <script>
+	document.addEventListener('DOMContentLoaded', () => {
+
     const countButton = document.getElementById('user-count-button');
     const countResult = document.getElementById('user-count-result');
 
     countButton.addEventListener('click', async () => {
-        countButton.disabled = true;
-        countResult.textContent = '조회 중입니다...';
+    countButton.disabled = true; //연달아 버튼 클릭하는 중복 방지
+    countResult.textContent = '조회 중입니다...';
 
         try {
             // 1. 페이지 이동 없이 컨트롤러에 GET 요청을 보낸다.
@@ -41,6 +43,46 @@
             countButton.disabled = false;
         }
     });
+    
+    
+    const resetPwdButton = document.getElementById('user-reset-password');
+    
+    resetPwdButton.addEventListener('click', async () => {
+    	
+    	if (!confirm('정말로 비밀번호를 초기화하시겠습니까?')) {
+    		return;
+    	}
+    	
+    resetPwdButton.disabled = true;
+    	
+    	try {
+    		
+    		const response = await fetch(resetPwdButton.dataset.url, { 
+    			method : 'POST',
+    			headers : { 
+    				'Accept' : 'text/plain' 
+    			}
+    		});
+    		
+    		if (!response.ok) {
+    			throw new Error(`비밀번호 초기화 실패 :  HTTP ${response.status}'`)
+    		}
+    		
+    		const resultText = await response.text();
+    		
+    		alert(resultText);
+    		
+    	} catch (error){
+    		alert('비밀번호 초기화 중에 오류가 발생했습니다.');
+    		console.error(error);	    		
+    	} finally {
+    		resetPwdButton.disabled = false;
+    	}
+    	
+    });
+    
+    
+	});
 </script>
 
 	<div class ="container">
@@ -49,7 +91,9 @@
 		<button type="button" id="user-count-button"
 		        th:data-url="@{/admin/user-count}">회원 수 확인</button>
 		<p id="user-count-result" role="status" aria-live="polite"></p>
-	
+		
+		<button type="button" id="user-reset-password"
+				th:data-url="@{/admin/user-password-reset}">비밀번호 초기화</button>
 	
 <table>
 	<thead>
@@ -58,7 +102,6 @@
 	 	<th>ID</th>
 	 	<th>회원 이름</th>
 	 	<th>이메일</th>
-	 	<th>직책</th>
 	 	<th>생성일자</th>
 	 	<th>변경일자</th>
 	 </tr>
@@ -69,9 +112,8 @@
 	  	<td th:text = "${user.id}">ID</td>
 	  	<td th:text = "${user.name}">회원 이름</td>
 	  	<td th:text = "${user.email}">이메일</td>
-	  	<td th:text = "${user.role}">직책</td>
-	  	<td th:text = "${#temporals.format(user.createdAt, 'yyyy-MM-dd')}">생성일자</td>
-	  	<td th:text = "${user.changeDt}">변경일자</td>
+	  	<td th:text = "${#temporals.format(user.createdDt, 'yyyy-MM-dd')}">생성일자</td>
+	  	<td th:text = "${user.changedDt}">변경일자</td>
 	  </tr>
 	</tbody>
 </table>

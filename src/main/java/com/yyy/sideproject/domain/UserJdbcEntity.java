@@ -31,23 +31,19 @@ public class UserJdbcEntity {
     @Column("PASSWORD")
     private String password;
     
-    @Column("ROLE")
-    private String role;
+    @Column("CREATED_DT")
+    private LocalDateTime createdDt;
     
-    @Column("CREATED_AT")
-    private LocalDateTime createdAt;
+    @Column("CHANGED_DT")
+    private LocalDateTime changedDt;
     
-    @Column("CHANGE_DT")
-    private LocalDateTime changeDt;
-    
-    public UserJdbcEntity(Long id, String name, String email, String password, String role, LocalDateTime changeDt) {
+    public UserJdbcEntity(Long id, String name, String email, String password, LocalDateTime changedDt) {
     	this.id = id;
     	this.name = name;
     	this.email = email;
     	this.password = password;
-    	this.role = role;
-    	this.createdAt = LocalDateTime.now();
-    	this.changeDt = changeDt;
+    	this.createdDt = LocalDateTime.now();
+    	this.changedDt = changedDt;
     }
     
 }

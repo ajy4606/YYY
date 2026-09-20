@@ -18,5 +18,13 @@ public class AdminService {
 	public List<UserJdbcEntity> selectUserAll() {
 		return adminRepository.selectUserAll();
 	}
+	
+	public int selectUserCount() {
+		return adminRepository.selectUserCount();
+	}
+	
+	public int updateUserPwd(String userId) {
+		return adminRepository.updateUserPwd(userId);
+	}
 
 }
