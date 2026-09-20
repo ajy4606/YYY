@@ -3,7 +3,7 @@
 
 <mapper namespace="com.yyy.sideproject.mapper.UserMapper">
 	<select id="srchUser" resultType="com.yyy.sideproject.dto.UserResponse">
-    SELECT ID, NAME, EMAIL, ROLE FROM USERS
+    SELECT ID, NAME, EMAIL, PASSWORD FROM USERS
     <if test="searchType != 'all' and keyword != null and keyword != ''">
 	    <where>
 	        <if test="searchType == 'id'">
@@ -20,13 +20,13 @@
     </select>
 
     <insert id="insertUser">
-        INSERT INTO users (email, password, role)
-        VALUES (#{email}, #{password}, #{role})
+        INSERT INTO users (email, password)
+        VALUES (#{email}, #{password})
     </insert>
 
     <insert id="save" parameterType="com.yyy.sideproject.dto.UserRequest">
-        INSERT INTO USERS (NAME, ID, EMAIL, PASSWORD, ROLE, CREATED_AT)
-        VALUES (#{name}, #{id}, #{email}, #{password}, 'role', SYSDATE)
+        INSERT INTO USERS (ID, NAME, EMAIL, PASSWORD, LOGIN_FAIL_CNT, CREATED_DT, CHANGED_DT)
+        VALUES (#{id}, #{name}, #{email}, #{password}, 0, SYSDATE, SYSDATE)
     </insert>
     
     <select id="findPasswordById" parameterType="long" resultType="string">
@@ -39,24 +39,24 @@
 	<update id="updatePassword" parameterType="com.yyy.sideproject.dto.UserRequest">
 	    UPDATE USERS
 	    SET PASSWORD = #{password},
-	        CHANGE_DT = SYSDATE
+	        CHANGED_DT = SYSDATE
 	    WHERE ID = #{id}
 	</update>
 	
 	<update id="updateEmail" parameterType="com.yyy.sideproject.dto.UserRequest">
 	    UPDATE USERS
 	    SET EMAIL = #{email},
-	        CHANGE_DT = SYSDATE
+	        CHANGED_DT = SYSDATE
 	    WHERE ID = #{id}
 	</update>
 
     <!-- FAQ 작성자 검증용: id로 회원 단건 조회 -->
     <select id="findById" resultType="com.yyy.sideproject.dto.UserResponse">
-        SELECT ID, NAME, EMAIL, ROLE FROM USERS WHERE ID = #{id}
+        SELECT ID, NAME, EMAIL FROM USERS WHERE ID = #{id}
     </select>
     
     <select id="loginUser" resultType="com.yyy.sideproject.dto.UserResponse">
-    SELECT ID, NAME, EMAIL, ROLE ,PASSWORD
+    SELECT ID, NAME, EMAIL ,PASSWORD
    	  FROM USERS
      WHERE ID = #{id}
 	</select>

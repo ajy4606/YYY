@@ -1,197 +1,259 @@
-<style>
-    /* =========================
-       상단 메뉴바
-       ========================= */
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 
-    .navbar {
-        background-color: #ffffff;
-        height: 60px;
+<head>
+    <meta charset="UTF-8">
+    <title>YYY</title>
 
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+    <style>
 
-        padding: 0 30px;
+        /* =====================================================
+           기본 설정
+           ===================================================== */
 
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        * {
+            box-sizing: border-box;
+        }
 
-        /*
-         * 화면 상단에 고정
-         */
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+            color: #212529;
+        }
 
-        z-index: 1000;
 
-        box-sizing: border-box;
-    }
+        /* =====================================================
+           상단 메뉴바
+           ===================================================== */
 
+        .navbar {
+            width: 100%;
+            height: 60px;
 
-    /* =========================
-       로고
-       ========================= */
+            background-color: #ffffff;
 
-    .navbar-logo a {
-        font-size: 1.25rem;
-        font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
 
-        color: #007bff;
+            padding: 0 30px;
 
-        text-decoration: none;
-    }
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 
+            /* 화면 상단에 고정 */
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
 
-    /* =========================
-       메뉴 그룹
-       ========================= */
+            z-index: 1000;
+        }
 
-    .navbar-menu {
-        display: flex;
-        align-items: center;
 
-        list-style: none;
+        /* =====================================================
+           로고
+           ===================================================== */
 
-        gap: 20px;
+        .navbar-logo a {
+            font-size: 1.25rem;
+            font-weight: bold;
 
-        margin: 0;
-        padding: 0;
-    }
+            color: #007bff;
 
+            text-decoration: none;
+        }
 
-    /* =========================
-       메뉴 링크
-       ========================= */
 
-    .nav-item {
-        color: #555;
+        /* =====================================================
+           메뉴 그룹
+           ===================================================== */
 
-        text-decoration: none;
+        .navbar-menu {
+            display: flex;
+            align-items: center;
 
-        font-size: 0.95rem;
-        font-weight: 500;
+            list-style: none;
 
-        padding: 8px 12px;
+            gap: 20px;
 
-        border-radius: 4px;
+            margin: 0;
+            padding: 0;
+        }
 
-        transition: all 0.2s ease;
 
-        cursor: pointer;
-    }
+        /* =====================================================
+           메뉴 링크
+           ===================================================== */
 
+        .nav-item {
+            display: inline-block;
 
-    .nav-item:hover {
-        background-color: #f1f3f5;
-        color: #007bff;
-    }
+            color: #555;
 
+            text-decoration: none;
 
-    /* =========================
-       상단 사용자 정보
-       ========================= */
+            font-size: 0.95rem;
+            font-weight: 500;
 
-    .nav-user-info {
-        font-size: 0.9rem;
+            padding: 8px 12px;
 
-        color: #666;
+            border-radius: 4px;
 
-        margin-right: 5px;
-    }
+            transition: all 0.2s ease;
 
+            cursor: pointer;
+        }
 
-    .nav-user-info strong {
-        color: #333;
-    }
+        .nav-item:hover {
+            background-color: #f1f3f5;
+            color: #007bff;
+        }
 
 
-    /* =========================
-       로그인 / 로그아웃 버튼
-       ========================= */
+        /* =====================================================
+           상단 사용자 정보
+           ===================================================== */
 
-    .btn-nav-action {
-        font-size: 0.9rem;
+        .nav-user-info {
+            font-size: 0.9rem;
+            color: #666;
 
-        padding: 6px 14px;
+            margin-right: 5px;
+        }
 
-        border-radius: 4px;
+        .nav-user-info strong {
+            color: #333;
+        }
 
-        text-decoration: none;
 
-        font-weight: 500;
-    }
+        /* =====================================================
+           로그인 / 로그아웃 버튼
+           ===================================================== */
 
+        .btn-nav-action {
+            display: inline-block;
 
-    .btn-login {
-        background-color: #007bff;
-        color: white;
-    }
+            font-size: 0.9rem;
 
+            padding: 6px 14px;
 
-    .btn-login:hover {
-        background-color: #0056b3;
-    }
+            border-radius: 4px;
 
+            text-decoration: none;
 
-    .btn-logout {
-        background-color: #fff;
+            font-weight: 500;
+        }
 
-        color: #dc3545;
 
-        border: 1px solid #dc3545;
-    }
+        /* 로그인 */
 
+        .btn-login {
+            background-color: #007bff;
+            color: white;
+        }
 
-    .btn-logout:hover {
-        background-color: #fff5f5;
-    }
+        .btn-login:hover {
+            background-color: #0056b3;
+        }
 
 
-    /* =========================
-       메인 컨텐츠 영역
-       ========================= */
+        /* 로그아웃 */
 
-    .content-container {
-        max-width: 1000px;
+        .btn-logout {
+            background-color: #ffffff;
+            color: #dc3545;
 
-        /*
-         * fixed navbar 때문에
-         * 상단에 여백을 확보
-         */
-        margin: 100px auto 40px;
+            border: 1px solid #dc3545;
+        }
 
-        padding: 40px;
+        .btn-logout:hover {
+            background-color: #fff5f5;
+        }
 
-        background: white;
 
-        border-radius: 8px;
+        /* =====================================================
+           메인 콘텐츠
+           
+           fixed navbar가 있기 때문에
+           위쪽에 100px 여백 확보
+           ===================================================== */
 
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        .content-container {
+            width: calc(100% - 40px);
+            max-width: 1000px;
 
-        box-sizing: border-box;
-    }
+            margin: 100px auto 40px;
 
+            padding: 40px;
 
-    /* =========================
-       기본 제목
-       ========================= */
+            background-color: #ffffff;
 
-    h1 {
-        font-size: 2rem;
+            border-radius: 8px;
 
-        color: #212529;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 
-        margin-bottom: 15px;
-    }
+            min-height: 500px;
+        }
 
 
-    .welcome-desc {
-        color: #6c757d;
+        /* =====================================================
+           기본 제목
+           ===================================================== */
 
-        font-size: 1.1rem;
-    }
-</style>
+        h1 {
+            font-size: 2rem;
+
+            color: #212529;
+
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .welcome-desc {
+            color: #6c757d;
+            font-size: 1.1rem;
+        }
+
+
+        /* =====================================================
+           반응형
+           ===================================================== */
+
+        @media (max-width: 768px) {
+
+            .navbar {
+                padding: 0 15px;
+            }
+
+            .navbar-menu {
+                gap: 5px;
+            }
+
+            .nav-item {
+                padding: 8px 6px;
+                font-size: 0.85rem;
+            }
+
+            .nav-user-info {
+                display: none;
+            }
+
+            .content-container {
+                width: calc(100% - 20px);
+
+                margin-top: 80px;
+
+                padding: 20px;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
 
 
 <!-- =====================================================
@@ -200,7 +262,9 @@
 
 <nav class="navbar">
 
+
     <!-- 로고 -->
+
     <div class="navbar-logo">
 
         <a th:href="@{/main}">
@@ -211,17 +275,19 @@
 
 
     <!-- 메뉴 -->
+
     <ul class="navbar-menu">
 
 
-        <!-- =============================================
+        <!-- =================================================
              로그인 상태
-             ============================================= -->
+             ================================================= -->
 
         <th:block th:if="${session.loginUser != null}">
 
 
             <!-- 과제 페이지 -->
+
             <li>
 
                 <span
@@ -236,6 +302,7 @@
 
 
             <!-- FAQ -->
+
             <li>
 
                 <span
@@ -250,6 +317,7 @@
 
 
             <!-- 회원 목록 -->
+
             <li>
 
                 <span
@@ -264,6 +332,7 @@
 
 
             <!-- 마이 페이지 -->
+
             <li>
 
                 <span
@@ -278,8 +347,8 @@
 
 
             <!-- 구분선 -->
-            <li
-                style="color: #dee2e6; margin: 0 5px;">
+
+            <li style="color: #dee2e6; margin: 0 5px;">
 
                 |
 
@@ -287,6 +356,7 @@
 
 
             <!-- 사용자 정보 + 로그아웃 -->
+
             <li>
 
                 <span class="nav-user-info">
@@ -300,7 +370,9 @@
 
                         </span>
 
-                    </strong>님
+                    </strong>
+
+                    님
 
                 </span>
 
@@ -319,9 +391,9 @@
         </th:block>
 
 
-        <!-- =============================================
+        <!-- =================================================
              로그아웃 상태
-             ============================================= -->
+             ================================================= -->
 
         <li th:unless="${session.loginUser != null}">
 
@@ -343,15 +415,10 @@
 
 
 <!-- =====================================================
-     메인 컨텐츠
-     
-     이 영역만
-     /users
-     /faq
-     /assignment
-     /mypage/mypage
-     
-     등의 결과로 교체됩니다.
+     메인 콘텐츠 영역
+
+     이 부분만 /users, /faq, /assignment,
+     /mypage/mypage 등의 결과로 교체됨
      ===================================================== -->
 
 <div
@@ -360,6 +427,7 @@
 
 
     <!-- 로그인 상태 -->
+
     <div th:if="${session.loginUser != null}">
 
         <h1>
@@ -391,7 +459,9 @@
     </div>
 
 
+
     <!-- 로그아웃 상태 -->
+
     <div th:unless="${session.loginUser != null}">
 
         <h1>
@@ -401,12 +471,7 @@
         </h1>
 
 
-        <p
-            class="welcome-desc"
-            style="
-                margin-top: 15px;
-                font-size: 0.95rem;
-            ">
+        <p class="welcome-desc">
 
             상단 우측의 로그인 버튼을 이용해
             로그인하실 수 있습니다.
@@ -420,12 +485,15 @@
 
 
 
+<!-- =====================================================
+     페이지 이동 JavaScript
+     ===================================================== -->
+
 <script>
 
     /*
-     * =====================================================
-     * 메뉴 클릭 시 본문 영역만 변경
-     * =====================================================
+     * 메뉴 클릭 시
+     * main-content 영역만 변경
      */
 
     function loadContent(url) {
@@ -440,6 +508,7 @@
                 /*
                  * HTTP 오류 확인
                  */
+
                 if (!response.ok) {
 
                     throw new Error(
@@ -452,8 +521,9 @@
 
 
                 /*
-                 * 서버에서 반환한 HTML
+                 * 서버에서 HTML 받기
                  */
+
                 return response.text();
 
             })
@@ -465,8 +535,9 @@
 
 
                 /*
-                 * 본문 영역 찾기
+                 * main-content 영역 찾기
                  */
+
                 const mainContent =
                     document.getElementById('main-content');
 
@@ -481,40 +552,36 @@
 
 
                 /*
-                 * 메뉴바는 그대로 두고
+                 * 메뉴바는 그대로 유지하고
                  *
                  * main-content 안쪽만 교체
                  */
+
                 mainContent.innerHTML = html;
 
 
                 /*
-                 * 화면이 바뀐 후
-                 * 맨 위쪽으로 이동
+                 * 화면을 위쪽으로 이동
                  */
+
                 window.scrollTo({
                     top: 0,
                     behavior: 'smooth'
                 });
-
             })
 
-
             .catch(error => {
-
                 console.error(
                     '페이지 이동 오류:',
                     error
                 );
 
-
                 alert(
                     '화면을 전환하는 도중 오류가 발생했습니다.\n'
                     + error.message
                 );
-
             });
-
     }
-
 </script>
+</body>
+</html>
