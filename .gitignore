@@ -34,6 +34,7 @@ build/
 
 # Build
 /target/
+/bin/
 
 # IDE
 .classpath
