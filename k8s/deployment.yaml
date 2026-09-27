@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: sideproject
-          image: ghcr.io/ajy4606/yyy:latest
+          image: ghcr.io/ajy4606/yyy:sha-a073b5bafa7e464a8410c73a836192ab86ad924a
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
