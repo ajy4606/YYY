@@ -3,10 +3,21 @@ spring:
     name: sideproject
 
   datasource:
-    url: jdbc:oracle:thin:@yyyproject.tplinkdns.com:1521/XEPDB1
-    username: IORDJY
-    password: iordjy
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: oracle.jdbc.OracleDriver
+
+  jpa:
+    show-sql: ${JPA_SHOW_SQL:false}
+    properties:
+      hibernate:
+        format_sql: true
+
+logging:
+  level:
+    org.hibernate.SQL: ${HIBERNATE_SQL_LOG_LEVEL:info}
+    org.hibernate.orm.jdbc.bind: ${HIBERNATE_BIND_LOG_LEVEL:off}
 
 mybatis:
   mapper-locations: classpath:mapper/**/*.xml
@@ -15,4 +26,4 @@ mybatis:
     map-underscore-to-camel-case: true
 
 server:
-  port: 8081
+  port: ${SERVER_PORT:8081}

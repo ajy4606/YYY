@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>FAQ 상세 - 타임리프</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        .detail-header { border-bottom: 2px solid #333; padding-bottom: 15px; margin-bottom: 20px; }
+        .detail-header h1 { margin: 0 0 10px; font-size: 22px; }
+        .meta { color: #888; font-size: 14px; }
+        .meta span { margin-right: 15px; }
+        .category { display: inline-block; background: #eee; padding: 3px 10px; border-radius: 4px; font-size: 13px; margin-bottom: 10px; }
+        .content { padding: 20px 5px; min-height: 150px; line-height: 1.7; white-space: pre-wrap; }
+        .actions { margin-top: 20px; }
+        .actions a { text-decoration: none; padding: 8px 16px; background: #333; color: white; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="detail-header">
+        <span class="category" th:text="${faq.category}">카테고리</span>
+        <h1>
+            <span th:if="${faq.isSecret}">🔒</span>
+            <span th:text="${faq.title}">제목입니다</span>
+        </h1>
+        <div class="meta">
+            <span th:text="'작성자: ' + ${faq.author}">작성자: 운영자</span>
+            <span th:text="'작성시간: ' + ${#temporals.format(faq.createdAt, 'yyyy-MM-dd HH:mm')}">작성시간: 2024-01-01 00:00</span>
+            <span th:if="${faq.updatedAt != null}"
+                  th:text="'수정시간: ' + ${#temporals.format(faq.updatedAt, 'yyyy-MM-dd HH:mm')}">수정시간</span>
+        </div>
+    </div>
+
+    <div class="content" th:text="${faq.content}">내용이 표시됩니다.</div>
+
+    <div class="actions">
+        <a th:href="@{/faq}">목록으로</a>
+    </div>
+</div>
+
+</body>
+</html>

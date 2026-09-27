@@ -1,0 +1,9 @@
+.git
+.github
+.env
+.env.*
+.idea
+.settings
+.vscode
+bin
+*.log
