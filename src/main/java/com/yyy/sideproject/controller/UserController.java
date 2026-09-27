@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.yyy.sideproject.dto.UserRequestDTO;
+import com.yyy.sideproject.dto.UserRequest;
 import com.yyy.sideproject.dto.UserResponse;
 import com.yyy.sideproject.service.UserService;
 
@@ -195,7 +195,7 @@ public class UserController {
 	}
 
 	@PostMapping("/saveUser")
-	public String saveUserProcess(UserRequestDTO userRequest) {
+	public String saveUserProcess(UserRequest userRequest) {
 		userService.createUser(userRequest);
 
 		return "redirect:/users";
@@ -273,7 +273,7 @@ public class UserController {
      * 5. 비밀번호 변경 기능 처리 (일반 Form POST 전송)
      */
     @PostMapping("/users/mypage/chg_password") 
-    public String changePassword(@ModelAttribute UserRequestDTO userRequest, HttpServletRequest request, Model model) {
+    public String changePassword(@ModelAttribute UserRequest userRequest, HttpServletRequest request, Model model) {
         try {
             // 1. 세션에서 로그인 회원 정보 조회
             HttpSession session = request.getSession(false);

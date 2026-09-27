@@ -40,6 +40,8 @@ build/
 .project
 .settings
 *.log
+.env
+.env.*
 
 # OS
 .DS_Store

@@ -1,6 +1,6 @@
 package com.yyy.sideproject.mapper;
 
-import com.yyy.sideproject.dto.UserRequestDTO;
+import com.yyy.sideproject.dto.UserRequest;
 import com.yyy.sideproject.dto.UserResponse;
 
 import java.util.List;
@@ -12,16 +12,16 @@ import org.springframework.data.repository.query.Param;
 public interface UserMapper {
 	List<UserResponse> srchUser(@Param("id") UserResponse userSearch);
 
-    void save(UserRequestDTO request);
+    void save(UserRequest request);
 
 	List<UserResponse> loginUser(@Param("id") UserResponse searchParam);
 	
 	//비밀번호 변경
-	void updatePassword(UserRequestDTO userRequest);
+	void updatePassword(UserRequest userRequest);
 	String findPasswordById(Long id);
 	
 	//이메일 변경
-	void updateEmail(UserRequestDTO userRequest);
+	void updateEmail(UserRequest userRequest);
 
 	UserResponse findById(Long id);
 
